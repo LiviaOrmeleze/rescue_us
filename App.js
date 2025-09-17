@@ -9,7 +9,6 @@ import {
   Linking,
   RefreshControl, 
   ScrollView, 
-  StyleSheet,
 } from "react-native";
 
 // Importe as imagens da logo
@@ -158,7 +157,7 @@ export default function App() {
           </View>
         </TouchableWithoutFeedback>
       )}
-      
+
       <View style={styles.caixabege}>
 
         <View style={styles.headerhistorico}>
@@ -265,14 +264,7 @@ export default function App() {
   );
 }
 
-const paginaGlobal = StyleSheet.create({
-  containerPrincipal: {
-    flex: 1,
-    paddingTop: 50,
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-});
+
 
 const cabecalhoLayout = StyleSheet.create({
   topoCabecalho: {
@@ -466,6 +458,9 @@ const alertaRisco = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+});
+
+  const styles = StyleSheet.create({
   caixabege: {
    backgroundColor: '#F7F4EA',
    width: 380,
