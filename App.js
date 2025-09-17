@@ -46,6 +46,19 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
+      <ScrollView
+        contentContainerStyle={[styles.scrollContainer, { paddingTop: 70 }]}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#8faaff"}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        
       <View style={cabecalhoLayout.topoCabecalho}>
         <Image
           source={logoSource}
@@ -262,17 +275,7 @@ export default function App() {
           </ScrollView>
       </View>
 
-      <ScrollView
-        contentContainerStyle={[styles.scrollContainer, { paddingTop: 70 }]}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={"#8faaff"}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-      >
+  
         <View style={styles.estCard}>
           <View style={styles.cardPQE}>
             <Text style={styles.textCardPQE}>
