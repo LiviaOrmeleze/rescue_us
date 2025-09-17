@@ -1,12 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
+  Linking,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
   const [refreshing, setRefreshing] = useState(false);
@@ -41,7 +44,7 @@ export default function App() {
         <View style={styles.estCard}>
           <View style={styles.cardPQE}>
             <Text style={styles.textCardPQE}>
-              ❤️ Parada Cardiorrespiratória
+            <Ionicons name="heart-outline" size={24} color="#9b0101"></Ionicons>  Parada Cardiorrespiratória
             </Text>
             <View style={styles.ListaPQE}>
               <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
@@ -75,7 +78,7 @@ export default function App() {
 
           <View style={styles.cardPQE}>
             <Text style={styles.textCardPQE}>
-            ⚠️  Queimadas
+            <Ionicons name="warning-outline" size={24} color="#9b0101"></Ionicons>   Queimadas
             </Text>
             <View style={styles.ListaPQE}>
               <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
@@ -109,7 +112,7 @@ export default function App() {
 
           <View style={styles.cardPQE}>
             <Text style={styles.textCardPQE}>
-              🛡️ Engasgo
+            <Ionicons  name="shield-outline" size={24} color="#9b0101"></Ionicons>   Engasgo
             </Text>
             <View style={styles.ListaPQE}>
               <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
@@ -142,15 +145,17 @@ export default function App() {
           </View>
         </View>
 
+          <TouchableOpacity onPress={() => Linking.openURL('tel:193')}>
         <View style={styles.caixaEmergencia}>
           <View style={styles.estCardEmergencia}>
-          <Text style={styles.textIcon}>📞</Text>
+          <Text style={styles.textIcon}> <Ionicons  name="call-outline" size={30} color="#FF9903"></Ionicons> </Text>
           <View>
           <Text style={styles.textEmergencia}>Emergência: 193</Text>
           <Text style={styles.textExpEmergencia}>Em casos de emergência, sempre acione o Corpo de Bombeiros</Text>
           </View>
           </View>
         </View>
+          </TouchableOpacity>
 
       </ScrollView>
     </View>
@@ -202,7 +207,7 @@ const styles = StyleSheet.create({
   },
   caixaEmergencia:{
     backgroundColor:"rgba(255,153,3,0.15)",
-    padding:20,
+    padding:18,
     borderRadius: 15,
     marginTop:30,
     borderWidth: 1,
@@ -213,7 +218,7 @@ const styles = StyleSheet.create({
     gap:10,
   },
   textIcon:{
-    fontSize:25,
+    alignItems:"center",
     padding:10
   },
   textEmergencia:{
