@@ -48,7 +48,7 @@ export default function App() {
       <StatusBar style="auto" />
 
       <ScrollView
-        contentContainerStyle={[styles.scrollContainer, { paddingTop: 70 }]}
+        contentContainerStyle={[styles.scrollContainer, { paddingTop: 30 }]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
