@@ -44,7 +44,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Incendio Residencial</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>Rua das Flores</Text>
             <View style={styles.diaedata}>
@@ -57,7 +57,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>Av. Central</Text>
             <View style={styles.diaedata}>
@@ -70,7 +70,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Acidente em Trânsito</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>13 de Maio</Text>
             <View style={styles.diaedata}>
@@ -83,7 +83,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Incendio Florestal</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>Rua Carolina</Text>
             <View style={styles.diaedata}>
@@ -96,7 +96,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>25 de Março</Text>
             <View style={styles.diaedata}>
@@ -109,7 +109,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>25 de Março</Text>
             <View style={styles.diaedata}>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   cbm:{
     marginTop: 10,
     backgroundColor: "#F7F4EA",
-    width: 335,
+    width: 330,
     height: 90,
     borderRadius: 15,
     padding: 10,
@@ -175,11 +175,12 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 10,
     padding: 5,
-    alignItems: "center",
-    borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.30)",
-    flex: 1,
-    alignItems: "flex-end", // coloca tudo do container à direita
+    borderWidth: 1,
+    // alignItems: "flex-end", // coloca tudo do container à direita
+  },
+  textobotaoconcluido: {
+    textAlign: "center", 
   },
   diaedata: {
     flexDirection: "row",
