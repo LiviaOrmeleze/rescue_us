@@ -59,42 +59,42 @@ export default function App() {
         showsVerticalScrollIndicator={false}
       >
         
-      <View style={cabecalhoLayout.topoCabecalho}>
+      <View style={styles.topoCabecalho}>
         <Image
           source={logoSource}
-          style={cabecalhoLayout.logoImagem}
+          style={styles.logoImagem}
           resizeMode="contain"
         />
-        <Text style={cabecalhoLayout.subtitulo}>
+        <Text style={styles.subtitulo}>
           Sistema de apoio para situações de emergência
         </Text>
       </View>
 
-      <View style={secaoWifi.cartaoPrincipal}>
-        <View style={secaoWifi.linhaTitulo}>
-          <Text style={secaoWifi.iconeWifi}>📶</Text>
-          <Text style={secaoWifi.tituloCartao}>Extensão de Rede WiFi</Text>
+      <View style={styles.cartaoPrincipal}>
+        <View style={styles.linhaTitulo}>
+          <Text style={styles.iconeWifi}> <Ionicons name="wifi-outline" size={24}></Ionicons> </Text>
+          <Text style={styles.tituloCartao}>Extensão de Rede WiFi</Text>
         </View>
-        <Text style={secaoWifi.textoDescritivo}>
+        <Text style={styles.textoDescritivo}>
           Ative a extensão para melhorar a cobertura para operações
         </Text>
-        <View style={secaoWifi.areaStatusBotao}>
-          <View style={secaoWifi.linhaStatus}>
-            <Text style={secaoWifi.textoStatus}>Status:</Text>
+        <View style={styles.areaStatusBotao}>
+          <View style={styles.linhaStatus}>
+            <Text style={styles.textoStatus}>Status:</Text>
             <Text
               style={[
-                secaoWifi.textoStatusDestaque,
-                wifiAtivado ? secaoWifi.statusAtivo : secaoWifi.statusInativo,
+                styles.textoStatusDestaque,
+                wifiAtivado ? styles.statusAtivo : styles.statusInativo,
               ]}
             >
               {wifiAtivado ? "ativo" : "inativo"}
             </Text>
           </View>
           <TouchableOpacity
-            style={secaoWifi.botaoAtivar}
+            style={styles.botaoAtivar}
             onPress={() => setWifiAtivado(!wifiAtivado)}
           >
-            <Text style={secaoWifi.textoBotao}>Ativar WiFi</Text>
+            <Text style={styles.textoBotao}>Ativar WiFi</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -117,7 +117,7 @@ export default function App() {
                 : navegacaoInferior.textoInativo
             }
           >
-            ⏱️ Histórico de Ajudas
+            <Ionicons name="time-outline" size={15} ></Ionicons> Histórico de Ajudas
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -137,7 +137,7 @@ export default function App() {
                 : navegacaoInferior.textoInativo
             }
           >
-            ❤️ Primeiros socorros
+            <Ionicons name="heart-outline" size={15}></Ionicons> Primeiros socorros
           </Text>
         </TouchableOpacity>
       </View>
@@ -399,24 +399,133 @@ export default function App() {
 
 
 
-const cabecalhoLayout = StyleSheet.create({
-  topoCabecalho: {
+
+
+const navegacaoInferior = StyleSheet.create({
+  containerBotoes: {
+    flexDirection: "row",
+    backgroundColor: "#f7f4ea",
+    borderRadius: 15,
+    justifyContent: "space-between",
+    marginTop: 20,
+    width: "90%",
+    alignSelf: "center",
+  },
+  botaoIndividual: {
+    flex: 1,
     alignItems: "center",
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 9,
+    borderRadius: 15,
   },
-  logoImagem: {
-    width: 220,
-    height: 100,
+  botaoAtivo: {
+    flex: 1,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 9,
   },
+  textoAtivo: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#000",
+  },
+  textoInativo: {
+    fontSize: 14,
+    color: "#333",
+  },
+});
+
+const alertaRisco = StyleSheet.create({
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
+  },
+  cartaoAlerta: {
+    width: "90%",
+    backgroundColor: "rgba(234, 34, 34, 0.44)",
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  cabecalhoAlerta: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start", // Alinha ao canto esquerdo
+    marginBottom: 10,
+  },
+  textoAlerta: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 20, // Texto grande
+  },
+  textoRisco: {
+    backgroundColor: "#F7C042",
+    color: "#000",
+    fontWeight: "bold",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  conteudoAlerta: {
+    alignItems: "center",
+  },
+  textoPrincipal: {
+    color: "#fff",
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 15,
+    fontWeight: "bold",
+  },
+  botaoLigar: {
+    backgroundColor: "#FFC107",
+    paddingVertical: 8,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+  },
+  textoBotao: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});
+
+  const styles = StyleSheet.create({
+    container:{
+      flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 20,
+    },
+    topoCabecalho: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    logoImagem: {
+      width: 220,
+      height: 100,
+    },
   subtitulo: {
     fontSize: 16,
     color: "#000",
   },
-});
-
-const secaoWifi = StyleSheet.create({
   cartaoPrincipal: {
-    width: "90%",
     backgroundColor: "rgba(181, 0, 0, 0.1)",
     borderWidth: 1,
     borderColor: "#dc3545",
@@ -488,112 +597,6 @@ const secaoWifi = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-});
-
-const navegacaoInferior = StyleSheet.create({
-  containerBotoes: {
-    flexDirection: "row",
-    backgroundColor: "#f7f4ea",
-    borderRadius: 15,
-    justifyContent: "space-between",
-    marginTop: 20,
-    width: "90%",
-    alignSelf: "center",
-  },
-  botaoIndividual: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 9,
-    borderRadius: 15,
-  },
-  botaoAtivo: {
-    flex: 1,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
-    paddingVertical: 10,
-    paddingHorizontal: 9,
-  },
-  textoAtivo: {
-    fontWeight: "bold",
-    fontSize: 14,
-    color: "#000",
-  },
-  textoInativo: {
-    fontSize: 14,
-    color: "#333",
-  },
-});
-
-const alertaRisco = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 100,
-  },
-  cartaoAlerta: {
-    width: "90%",
-    backgroundColor: "rgba(234, 34, 34, 0.44)",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  cabecalhoAlerta: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start", // Alinha ao canto esquerdo
-    marginBottom: 10,
-  },
-  textoAlerta: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 20, // Texto grande
-  },
-  textoRisco: {
-    backgroundColor: "#F7C042",
-    color: "#000",
-    fontWeight: "bold",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 14,
-    marginLeft: 8,
-  },
-  conteudoAlerta: {
-    alignItems: "center",
-  },
-  textoPrincipal: {
-    color: "#fff",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 15,
-    fontWeight: "bold",
-  },
-  botaoLigar: {
-    backgroundColor: "#FFC107",
-    paddingVertical: 8,
-    paddingHorizontal: 30,
-    borderRadius: 15,
-  },
-  textoBotao: {
-    color: "#000",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
-
-  const styles = StyleSheet.create({
   caixabege: {
    backgroundColor: '#F7F4EA',
    width: 380,
