@@ -1,14 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      console.log("🔄 Atualizando dados...");
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    } catch (error) {
+      console.error("Erro durante refresh:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.caixabege}>
-        <View>
+
+        <View style={styles.headerhistorico}>
           <Text style={styles.titulohistorico}>Histórico de Ocorrências</Text>
           <Text style={styles.textohistorico}>Registro das últimas operações realizadas</Text>
+        </View>
+
+          <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#8faaff"}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+
+          <View style={styles.caixashistorico}>
 
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
@@ -75,7 +106,21 @@ export default function App() {
             </View>
           </View>
 
-        </View>
+          <View style={styles.cbm}>
+            <View style={styles.tituloebotao}>
+            <Text style={styles.textocbm}>Resgate em Altura</Text>
+            <View style={styles.botaoconcluido}><Text>Concluído</Text></View>
+            </View>
+            <Text>25 de Março</Text>
+            <View style={styles.diaedata}>
+            <Text>01/01/2025</Text>
+            <Text>04:00</Text>
+            <Text style={styles.vidassalvas}>1 Vida salva!</Text>
+            </View>
+          </View>
+          
+          </View>
+          </ScrollView>
       </View>
     </View>
   );
@@ -96,6 +141,9 @@ const styles = StyleSheet.create({
    padding: 23,
    borderWidth: 1,
    borderColor: "rgba(0, 0, 0, 0.10)",
+  },
+  headerhistorico: {
+    marginBottom:10,
   },
   titulohistorico:{
     fontWeight: "bold",
@@ -130,7 +178,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.30)",
-    justifyContent: "flex-end",
+    flex: 1,
+    alignItems: "flex-end", // coloca tudo do container à direita
   },
   diaedata: {
     flexDirection: "row",
@@ -140,5 +189,9 @@ const styles = StyleSheet.create({
     color: "#FF9903",
     fontWeight: "bold",
     fontSize: 15,
+  },
+  caixashistorico:{
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
