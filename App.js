@@ -27,7 +27,6 @@ export default function App() {
 
   return (
     <View style={paginaGlobal.containerPrincipal}>
-      {/* SEÇÃO DO CABEÇALHO */}
       <View style={cabecalhoLayout.topoCabecalho}>
         <Image
           source={logoSource}
@@ -39,7 +38,6 @@ export default function App() {
         </Text>
       </View>
 
-      {/* SEÇÃO DE WIFI */}
       <View style={secaoWifi.cartaoPrincipal}>
         <View style={secaoWifi.linhaTitulo}>
           <Text style={secaoWifi.iconeWifi}>📶</Text>
@@ -69,7 +67,6 @@ export default function App() {
         </View>
       </View>
 
-      {/* BOTÕES DE NAVEGAÇÃO */}
       <View style={navegacaoInferior.containerBotoes}>
         <TouchableOpacity
           style={[
@@ -113,7 +110,6 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      {/* SEÇÃO DO ALERTA */}
       {alertaVisivel && (
         <TouchableWithoutFeedback onPress={() => setAlertaVisivel(false)}>
           <View style={alertaRisco.overlay}>
