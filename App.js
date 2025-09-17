@@ -44,7 +44,7 @@ export default function App() {
           <View style={styles.cbm}>
             <View style={styles.tituloebotao}>
             <Text style={styles.textocbm}>Incendio Residencial</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
+            <View style={[styles.botaoconcluido]}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
             </View>
             <Text>Rua das Flores</Text>
             <View style={styles.diaedata}>
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
   },
   tituloebotao: {
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   botaoconcluido: {
     backgroundColor: "#F7F4EA",
