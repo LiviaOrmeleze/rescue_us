@@ -21,7 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function App() {
   const [wifiAtivado, setWifiAtivado] = useState(false);
   const colorScheme = useColorScheme();
-  const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
+  const logoSource = colorScheme === "dark" ? LogoDark : LogoLight;
   const [ativo, setAtivo] = useState("historico");
   const [alertaVisivel, setAlertaVisivel] = useState(false);
 
@@ -48,7 +48,7 @@ export default function App() {
       <StatusBar style="auto" />
 
       <ScrollView
-        contentContainerStyle={[styles.scrollContainer, { paddingTop: 70 }]}
+        contentContainerStyle={[styles.scrollContainer, { paddingTop: 20 }]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -72,8 +72,7 @@ export default function App() {
 
       <View style={styles.cartaoPrincipal}>
         <View style={styles.linhaTitulo}>
-          <Text style={styles.iconeWifi}> <Ionicons name="wifi-outline" size={24}></Ionicons> </Text>
-          <Text style={styles.tituloCartao}>Extensão de Rede WiFi</Text>
+          <Text style={styles.tituloCartao}> <Ionicons name="wifi-outline" size={24}> </Ionicons>Extensão de Rede WiFi</Text>
         </View>
         <Text style={styles.textoDescritivo}>
           Ative a extensão para melhorar a cobertura para operações
@@ -84,26 +83,26 @@ export default function App() {
             <Text
               style={[
                 styles.textoStatusDestaque,
-                wifiAtivado ? styles.statusAtivo : styles.statusInativo,
+              styles.status
               ]}
             >
-              {wifiAtivado ? "ativo" : "inativo"}
+              {wifiAtivado ? "Ativo" : "Inativo"}
             </Text>
           </View>
           <TouchableOpacity
             style={styles.botaoAtivar}
             onPress={() => setWifiAtivado(!wifiAtivado)}
           >
-            <Text style={styles.textoBotao}>Ativar WiFi</Text>
+            <Text style={styles.textoBotaoWiFi}>Ativar WiFi</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <View style={navegacaoInferior.containerBotoes}>
+      <View style={styles.containerBotoes}>
         <TouchableOpacity
           style={[
-            navegacaoInferior.botaoIndividual,
-            ativo === "historico" && navegacaoInferior.botaoAtivo,
+            styles.botaoIndividual,
+            ativo === "historico" && styles.botaoAtivo,
           ]}
           onPress={() => {
             setAtivo("historico");
@@ -113,8 +112,8 @@ export default function App() {
           <Text
             style={
               ativo === "historico"
-                ? navegacaoInferior.textoAtivo
-                : navegacaoInferior.textoInativo
+                ? styles.textoAtivo
+                : styles.textoInativo
             }
           >
             <Ionicons name="time-outline" size={15} ></Ionicons> Histórico de Ajudas
@@ -122,8 +121,8 @@ export default function App() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[
-            navegacaoInferior.botaoIndividual,
-            ativo === "socorros" && navegacaoInferior.botaoAtivo,
+            styles.botaoIndividual,
+            ativo === "socorros" && styles.botaoAtivo,
           ]}
           onPress={() => {
             setAtivo("socorros");
@@ -133,8 +132,8 @@ export default function App() {
           <Text
             style={
               ativo === "socorros"
-                ? navegacaoInferior.textoAtivo
-                : navegacaoInferior.textoInativo
+                ? styles.textoAtivo
+                : styles.textoInativo
             }
           >
             <Ionicons name="heart-outline" size={15}></Ionicons> Primeiros socorros
@@ -144,26 +143,26 @@ export default function App() {
 
       {alertaVisivel && (
         <TouchableWithoutFeedback onPress={() => setAlertaVisivel(false)}>
-          <View style={alertaRisco.overlay}>
+          <View style={styles.overlay}>
             <TouchableWithoutFeedback>
-              <View style={alertaRisco.cartaoAlerta}>
-                <View style={alertaRisco.cabecalhoAlerta}>
-                  <Text style={alertaRisco.textoAlerta}>ALERTA! 🆘</Text>
+              <View style={styles.cartaoAlerta}>
+                <View style={styles.cabecalhoAlerta}>
+                  <Text style={styles.textoAlerta}>ALERTA! 🆘</Text>
                 </View>
-                <View style={alertaRisco.conteudoAlerta}>
-                  <Text style={alertaRisco.textoPrincipal}>
+                <View style={styles.conteudoAlerta}>
+                  <Text style={styles.textoPrincipal}>
                     Se não for possível fazer os primeiros socorros em caso de
                     perigo, não faça! Acione diretamente o corpo de bombeiro.
                     botão de ligar 193
                   </Text>
                   <TouchableOpacity
-                    style={alertaRisco.botaoLigar}
+                    style={styles.botaoLigar}
                     onPress={(e) => {
                       e.stopPropagation();
                       handleLigar();
                     }}
                   >
-                    <Text style={alertaRisco.textoBotao}>Ligar 193</Text>
+                    <Text style={styles.textoBotao}>Ligar 193</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -399,112 +398,6 @@ export default function App() {
 
 
 
-
-
-const navegacaoInferior = StyleSheet.create({
-  containerBotoes: {
-    flexDirection: "row",
-    backgroundColor: "#f7f4ea",
-    borderRadius: 15,
-    justifyContent: "space-between",
-    marginTop: 20,
-    width: "90%",
-    alignSelf: "center",
-  },
-  botaoIndividual: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 9,
-    borderRadius: 15,
-  },
-  botaoAtivo: {
-    flex: 1,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
-    paddingVertical: 10,
-    paddingHorizontal: 9,
-  },
-  textoAtivo: {
-    fontWeight: "bold",
-    fontSize: 14,
-    color: "#000",
-  },
-  textoInativo: {
-    fontSize: 14,
-    color: "#333",
-  },
-});
-
-const alertaRisco = StyleSheet.create({
-
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 100,
-  },
-  cartaoAlerta: {
-    width: "90%",
-    backgroundColor: "rgba(234, 34, 34, 0.44)",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  cabecalhoAlerta: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start", // Alinha ao canto esquerdo
-    marginBottom: 10,
-  },
-  textoAlerta: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 20, // Texto grande
-  },
-  textoRisco: {
-    backgroundColor: "#F7C042",
-    color: "#000",
-    fontWeight: "bold",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 14,
-    marginLeft: 8,
-  },
-  conteudoAlerta: {
-    alignItems: "center",
-  },
-  textoPrincipal: {
-    color: "#fff",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 15,
-    fontWeight: "bold",
-  },
-  botaoLigar: {
-    backgroundColor: "#FFC107",
-    paddingVertical: 8,
-    paddingHorizontal: 30,
-    borderRadius: 15,
-  },
-  textoBotao: {
-    color: "#000",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
-
   const styles = StyleSheet.create({
     container:{
       flex: 1,
@@ -528,24 +421,19 @@ const alertaRisco = StyleSheet.create({
   cartaoPrincipal: {
     backgroundColor: "rgba(181, 0, 0, 0.1)",
     borderWidth: 1,
-    borderColor: "#dc3545",
-    borderRadius: 8,
+    borderColor: "#9b0101",
+    borderRadius: 12,
     padding: 15,
     marginTop: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowRadius: 3
   },
   linhaTitulo: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 5,
-  },
-  iconeWifi: {
-    fontSize: 24,
-    marginRight: 10,
   },
   tituloCartao: {
     fontSize: 18,
@@ -553,9 +441,9 @@ const alertaRisco = StyleSheet.create({
     color: "#000",
   },
   textoDescritivo: {
-    fontSize: 14,
+    fontSize: 15,
     color: "#000",
-    marginBottom: 15,
+    marginBottom: 25,
   },
   areaStatusBotao: {
     flexDirection: "row",
@@ -577,34 +465,46 @@ const alertaRisco = StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: "#FF9903",
     borderRadius: 6,
-    padding: 8,
+    padding: 2,
+    paddingHorizontal:10,
     fontSize: 14,
     marginBottom: 1,
-  },
-  statusInativo: {
-    color: "#fff",
-  },
-  statusAtivo: {
     color: "#fff",
   },
   botaoAtivar: {
-    backgroundColor: "#dc3545",
-    paddingVertical: 8,
+    backgroundColor: "#9b0101",
+    paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
   },
-  textoBotao: {
+  textoBotaoWiFi: {
     color: "#fff",
-    fontWeight: "bold",
+  },
+  containerBotoes: {
+    flexDirection: "row",
+    backgroundColor: "#f7f4ea",
+    borderRadius: 17,
+    justifyContent: "space-between",
+    marginTop: 20,
+    padding:2,
+    alignSelf: "center",
+  },
+  botaoIndividual: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 9,
+    borderRadius: 15,
   },
   caixabege: {
    backgroundColor: '#F7F4EA',
-   width: 380,
-   height: 600,
+  //  width: 380,
+  //  height: 600,
    borderRadius: 20,
    padding: 23,
    borderWidth: 1,
    borderColor: "rgba(0, 0, 0, 0.10)",
+   marginTop:20,
   },
   headerhistorico: {
     marginBottom:10,
@@ -619,10 +519,10 @@ const alertaRisco = StyleSheet.create({
   cbm:{
     marginTop: 10,
     backgroundColor: "#F7F4EA",
-    width: 330,
-    height: 90,
+    // width: 330,
+    // height: 90,
     borderRadius: 15,
-    padding: 10,
+    padding: 15,
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.30)",
   },
@@ -718,6 +618,88 @@ const alertaRisco = StyleSheet.create({
   textEmergencia:{
     fontWeight: "bold",
     fontSize: 16,
-  }
+  },
+ 
+  botaoAtivo: {
+    flex: 1,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 9,
+  },
+  textoAtivo: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#000",
+  },
+  textoInativo: {
+    fontSize: 14,
+    color: "#333",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
+  },
+  cartaoAlerta: {
+    width: "90%",
+    backgroundColor: "rgba(234, 34, 34, 0.44)",
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  cabecalhoAlerta: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start", // Alinha ao canto esquerdo
+    marginBottom: 10,
+  },
+  textoAlerta: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 20, // Texto grande
+  },
+  textoRisco: {
+    backgroundColor: "#F7C042",
+    color: "#000",
+    fontWeight: "bold",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  conteudoAlerta: {
+    alignItems: "center",
+  },
+  textoPrincipal: {
+    color: "#fff",
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 15,
+    fontWeight: "bold",
+  },
+  botaoLigar: {
+    backgroundColor: "#FFC107",
+    paddingVertical: 8,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+  },
+  textoBotao: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 
 });
