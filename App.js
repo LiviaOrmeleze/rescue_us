@@ -18,15 +18,19 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "./hooks/useTheme";
 
 export default function App() {
   const [wifiAtivado, setWifiAtivado] = useState(false);
   const colorScheme = useColorScheme();
-  const logoSource = colorScheme === "dark" ? LogoDark : LogoLight;
+  const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [ativo, setAtivo] = useState("historico");
   const [alertaVisivel, setAlertaVisivel] = useState(false);
   // const [mostrarPrimeirosSOS, setMostrarPrimeirosSOS] = useState(false);
   const [telaAtiva, setTelaAtiva] = useState("home"); // Tela inicial é "home"
+
+  const styles = createStyles(useTheme());
+
 
   const handleLigar = () => {
     Linking.openURL(`tel:193`);
@@ -536,10 +540,11 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) =>
+  StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.backgroundColor,
     // alignItems: "center",
     // justifyContent: "center",
     paddingHorizontal: 20,
@@ -556,7 +561,7 @@ const styles = StyleSheet.create({
   subtitulo: {
     textAlign: "center",
     fontSize: 16,
-    color: "#000",
+    color: theme.colorSub,
   },
   logoENot: {
     flexDirection: "row",
@@ -564,13 +569,13 @@ const styles = StyleSheet.create({
     gap: 130,
   },
   cartaoPrincipal: {
-    backgroundColor: "rgba(181, 0, 0, 0.1)",
+    backgroundColor: theme.cartaoPrincipal,
     borderWidth: 1,
-    borderColor: "#9b0101",
+    borderColor: theme.borderColorCP,
     borderRadius: 12,
     padding: 15,
     marginTop: 20,
-    shadowColor: "#000",
+    shadowColor: theme.shadowColorCP,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -583,11 +588,11 @@ const styles = StyleSheet.create({
   tituloCartao: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#000",
+    color: theme.colorC,
   },
   textoDescritivo: {
     fontSize: 15,
-    color: "#000",
+    color: theme.colorD,
     marginBottom: 25,
   },
   areaStatusBotao: {
@@ -601,7 +606,7 @@ const styles = StyleSheet.create({
   },
   textoStatus: {
     fontSize: 14,
-    color: "#000",
+    color: theme.colorS,
     fontWeight: "bold",
     marginRight: 5,
   },
@@ -907,7 +912,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // alignItems: "flex-end", // coloca tudo do container à direita
   }, botaoconcluidoNotEmAnd: {
-    backgroundColor: "#F6DC43",
+    backgroundColor: "#FFF287",
     width: 90,
     height: 30,
     borderRadius: 10,
