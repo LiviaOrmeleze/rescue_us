@@ -469,7 +469,7 @@ export default function App() {
               onPress={() => setTelaAtiva("home")}
               style={styles.btnVoltar}
             >
-              <Ionicons name="arrow-back-circle-outline" size={30}></Ionicons>
+              <Ionicons style={styles.IconNot} name="arrow-back-circle-outline" size={30}></Ionicons>
             </TouchableOpacity>
           </View>
           <View style={styles.caixabege}>
@@ -478,7 +478,7 @@ export default function App() {
               <View style={styles.tituloebotaoNot}>
                 <Text style={styles.textocbmNot}>Incendio Residencial</Text>
                 <View style={styles.botaoconcluidoNotCon}>
-                  <Text style={styles.textobotaoconcluido}>Concluído</Text>
+                  <Text style={styles.textobotaoconcluidoNot}>Concluído</Text>
                 </View>
               </View>
               <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
@@ -493,7 +493,7 @@ export default function App() {
               <View style={styles.tituloebotaoNot}>
                 <Text style={styles.textocbmNot}>Incendio Residencial</Text>
                 <View style={styles.botaoconcluidoNotEmAnd}>
-                  <Text style={styles.textobotaoconcluido}>Acontecendo</Text>
+                  <Text style={styles.textobotaoconcluidoNot}>Acontecendo</Text>
                 </View>
               </View>
               <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
@@ -702,6 +702,10 @@ const createStyles = (theme) =>
     // alignItems: "flex-end", // coloca tudo do container à direita
   },
   textobotaoconcluido: {
+    textAlign: "center",
+    color: theme.color
+  },
+  textobotaoconcluidoNot: {
     textAlign: "center",
     color: theme.colorP
   },
