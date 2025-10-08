@@ -7,16 +7,18 @@ import {
   useColorScheme,
   TouchableWithoutFeedback,
   Linking,
-  RefreshControl, 
-  ScrollView, 
+  RefreshControl,
+  ScrollView,
 } from "react-native";
 
 // Importe as imagens da logo
 import LogoDark from "./assets/LogoDark.png";
 import LogoLight from "./assets/LogoLight.png";
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "./hooks/useTheme";
 
 export default function App() {
   const [wifiAtivado, setWifiAtivado] = useState(false);
@@ -24,6 +26,11 @@ export default function App() {
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [ativo, setAtivo] = useState("historico");
   const [alertaVisivel, setAlertaVisivel] = useState(false);
+  // const [mostrarPrimeirosSOS, setMostrarPrimeirosSOS] = useState(false);
+  const [telaAtiva, setTelaAtiva] = useState("home"); // Tela inicial é "home"
+
+  const styles = createStyles(useTheme());
+
 
   const handleLigar = () => {
     Linking.openURL(`tel:193`);
@@ -44,126 +51,484 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
 
-      <ScrollView
-        contentContainerStyle={[styles.scrollContainer, { paddingTop: 30 }]}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={"#8faaff"}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-        
-      <View style={cabecalhoLayout.topoCabecalho}>
-        <Image
-          source={logoSource}
-          style={cabecalhoLayout.logoImagem}
-          resizeMode="contain"
-        />
-        <Text style={cabecalhoLayout.subtitulo}>
-          Sistema de apoio para situações de emergência
-        </Text>
-      </View>
-
-      <View style={secaoWifi.cartaoPrincipal}>
-        <View style={secaoWifi.linhaTitulo}>
-          <Text style={secaoWifi.iconeWifi}>📶</Text>
-          <Text style={secaoWifi.tituloCartao}>Extensão de Rede WiFi</Text>
-        </View>
-        <Text style={secaoWifi.textoDescritivo}>
-          Ative a extensão para melhorar a cobertura para operações
-        </Text>
-        <View style={secaoWifi.areaStatusBotao}>
-          <View style={secaoWifi.linhaStatus}>
-            <Text style={secaoWifi.textoStatus}>Status:</Text>
-            <Text
-              style={[
-                secaoWifi.textoStatusDestaque,
-                wifiAtivado ? secaoWifi.statusAtivo : secaoWifi.statusInativo,
-              ]}
-            >
-              {wifiAtivado ? "ativo" : "inativo"}
+      {telaAtiva === "home" && (
+        <ScrollView
+          contentContainerStyle={[styles.scrollContainer, { paddingTop: 20 }]}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={"#8faaff"}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.topoCabecalho}>
+            <View style={styles.logoENot}>
+              <Image
+                source={logoSource}
+                style={styles.logoImagem}
+                resizeMode="contain"
+              />
+              <TouchableOpacity onPress={() => setTelaAtiva("notificacao")}>
+                <Ionicons style={styles.IconNot} name="notifications-outline" size={20}></Ionicons>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.subtitulo}>
+              Sistema de apoio para situações de emergência
             </Text>
           </View>
-          <TouchableOpacity
-            style={secaoWifi.botaoAtivar}
-            onPress={() => setWifiAtivado(!wifiAtivado)}
-          >
-            <Text style={secaoWifi.textoBotao}>Ativar WiFi</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
 
-      <View style={navegacaoInferior.containerBotoes}>
-        <TouchableOpacity
-          style={[
-            navegacaoInferior.botaoIndividual,
-            ativo === "historico" && navegacaoInferior.botaoAtivo,
-          ]}
-          onPress={() => {
-            setAtivo("historico");
-            setAlertaVisivel(false);
-          }}
-        >
-          <Text
-            style={
-              ativo === "historico"
-                ? navegacaoInferior.textoAtivo
-                : navegacaoInferior.textoInativo
-            }
-          >
-            ⏱️ Histórico de Ajudas
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            navegacaoInferior.botaoIndividual,
-            ativo === "socorros" && navegacaoInferior.botaoAtivo,
-          ]}
-          onPress={() => {
-            setAtivo("socorros");
-            setAlertaVisivel(true);
-          }}
-        >
-          <Text
-            style={
-              ativo === "socorros"
-                ? navegacaoInferior.textoAtivo
-                : navegacaoInferior.textoInativo
-            }
-          >
-            ❤️ Primeiros socorros
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.cartaoPrincipal}>
+            <View style={styles.linhaTitulo}>
+              <Text style={styles.tituloCartao}>
+                {" "}
+                <Ionicons name="wifi-outline" size={24}>
+                  {" "}
+                </Ionicons>
+                Extensão de Rede WiFi
+              </Text>
+            </View>
+            <Text style={styles.textoDescritivo}>
+              Ative a extensão para melhorar a cobertura para operações
+            </Text>
+            <View style={styles.areaStatusBotao}>
+              <View style={styles.linhaStatus}>
+                <Text style={styles.textoStatus}>Status:</Text>
+                <Text style={[styles.textoStatusDestaque, styles.status]}>
+                  {wifiAtivado ? "Ativo" : "Inativo"}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.botaoAtivar}
+                onPress={() => setWifiAtivado(!wifiAtivado)}
+              >
+                <Text style={styles.textoBotaoWiFi}>Ativar WiFi</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.containerBotoes}>
+            <TouchableOpacity
+              style={[
+                styles.botaoIndividual,
+                ativo === "historico" && styles.botaoAtivo,
+              ]}
+              onPress={() => {
+                setAtivo("historico");
+                setAlertaVisivel(false);
+              }}
+            >
+              <Text
+                style={
+                  ativo === "historico"
+                    ? styles.textoAtivo
+                    : styles.textoInativo
+                }
+              >
+                <Ionicons name="time-outline" size={15}></Ionicons> Histórico de
+                Ajudas
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.botaoIndividual,
+                ativo === "socorros" && styles.botaoAtivo,
+              ]}
+              onPress={() => {
+                setAtivo("socorros");
+                // setMostrarPrimeirosSOS(!mostrarPrimeirosSOS);
+                setAlertaVisivel(true);
+              }}
+            >
+              <Text
+                style={
+                  ativo === "socorros" ? styles.textoAtivo : styles.textoInativo
+                }
+              >
+                <Ionicons name="heart-outline" size={15}></Ionicons> Primeiros
+                socorros
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {ativo === "historico" && (
+            <View style={styles.caixabege}>
+              <View style={styles.headerhistorico}>
+                <Text style={styles.titulohistorico}>
+                  Histórico de Ocorrências
+                </Text>
+                <Text style={styles.textohistorico}>
+                  Registro das últimas operações realizadas
+                </Text>
+              </View>
+
+              <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    tintColor={"#8faaff"}
+                  />
+                }
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={styles.caixashistorico}>
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Incendio Residencial</Text>
+                      <View style={[styles.botaoconcluido]}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData} >Rua das Flores</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                      <Text  style={styles.colorRuaDiaData}>14:30</Text>
+                      <Text style={styles.vidassalvas}>3 Vidas salvas!</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Resgate em Altura</Text>
+                      <View style={styles.botaoconcluido}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData}>Av. Central</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>14/02/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>09:30</Text>
+                      <Text style={styles.vidassalvas}>1 Vida salva!</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Acidente em Trânsito</Text>
+                      <View style={styles.botaoconcluido}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData}>13 de Maio</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>02/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>12:45</Text>
+                      <Text style={styles.vidassalvas}>4 Vidas salvas!</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Incendio Florestal</Text>
+                      <View style={styles.botaoconcluido}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData}>Rua Carolina</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>02/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>01:00</Text>
+                      <Text style={styles.vidassalvas}>5 Vidas salvas!</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Resgate em Altura</Text>
+                      <View style={styles.botaoconcluido}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData}>25 de Março</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>01/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>04:00</Text>
+                      <Text style={styles.vidassalvas}>1 Vida salva!</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.cbm}>
+                    <View style={styles.tituloebotao}>
+                      <Text style={styles.textocbm}>Resgate em Altura</Text>
+                      <View style={styles.botaoconcluido}>
+                        <Text style={styles.textobotaoconcluido}>
+                          Concluído
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.colorRuaDiaData}>25 de Março</Text>
+                    <View style={styles.diaedata}>
+                      <Text style={styles.colorRuaDiaData}>01/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>04:00</Text>
+                      <Text style={styles.vidassalvas}>1 Vida salva!</Text>
+                    </View>
+                  </View>
+                </View>
+              </ScrollView>
+            </View>
+          )}
+
+          {ativo === "socorros" && (
+            <View style={styles.estCard}>
+              <View style={styles.cardPQE}>
+                <Text style={styles.textCardPQE}>
+                  <Ionicons
+                    name="heart-outline"
+                    size={24}
+                    color="#9b0101"
+                  ></Ionicons>{" "}
+                  Parada Cardiorrespiratória
+                </Text>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    1
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Verifique a consciência da vítima
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    2
+                  </Text>
+                  <Text style={styles.textListaPQE}>Chame Ajuda (193)</Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    3
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Pocisione as mãos no centro do peito
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    4
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Faça compressões de 5-6 cm de profundidade
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    5
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Mantenha o ritmo de 100-200 compressões/min
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.cardPQE}>
+                <Text style={styles.textCardPQE}>
+                  <Ionicons
+                    name="warning-outline"
+                    size={24}
+                    color="#9b0101"
+                  ></Ionicons>{" "}
+                  Queimadas
+                </Text>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    1
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Remova a vítima da fonte de calor
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    2
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Resfrie com água corrente por 10-20 min
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    3
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Não aplique gelo diretamente
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    4
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Cubra com pano limpo e úmido
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    5
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Procure atendimento médico
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.cardPQE}>
+                <Text style={styles.textCardPQE}>
+                  <Ionicons
+                    name="shield-outline"
+                    size={24}
+                    color="#9b0101"
+                  ></Ionicons>{" "}
+                  Engasgo
+                </Text>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    1
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Incentive a tosse se a pessoa conseguir
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    2
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Aplique 5 pancadas nas costas
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    3
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Faça a manobra de Heimilich se necessário
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    4
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Alterne pancadas e compreensões
+                  </Text>
+                </View>
+                <View style={styles.ListaPQE}>
+                  <Text style={[styles.bolinhaLista, styles.textBolinha]}>
+                    5
+                  </Text>
+                  <Text style={styles.textListaPQE}>
+                    Chame ajuda se não resolver
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          <TouchableOpacity onPress={() => Linking.openURL("tel:193")}>
+            <View style={styles.caixaEmergencia}>
+              <View style={styles.estCardEmergencia}>
+                <Text style={styles.textIcon}>
+                  {" "}
+                  <Ionicons
+                    name="call-outline"
+                    size={30}
+                    color="#FF9903"
+                  ></Ionicons>{" "}
+                </Text>
+                <View>
+                  <Text style={styles.textEmergencia}>Emergência: 193</Text>
+                  <Text style={styles.textExpEmergencia}>
+                    Em casos de emergência, sempre acione o Corpo de Bombeiros
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+
+      {telaAtiva === "notificacao" && (
+        <View>
+          <View style={styles.estNot}>
+            <TouchableOpacity
+              onPress={() => setTelaAtiva("home")}
+              style={styles.btnVoltar}
+            >
+              <Ionicons name="arrow-back-circle-outline" size={30}></Ionicons>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.caixabege}>
+            <Text style={styles.tituloNotificacao}>Notificações</Text>
+            <View style={styles.cbmNot}>
+              <View style={styles.tituloebotaoNot}>
+                <Text style={styles.textocbmNot}>Incendio Residencial</Text>
+                <View style={styles.botaoconcluidoNotCon}>
+                  <Text style={styles.textobotaoconcluido}>Concluído</Text>
+                </View>
+              </View>
+              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
+              <View style={styles.diaedataNot}>
+                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                <Text style={styles.colorRuaDiaData}>14:30</Text>
+                <Text style={styles.distanciaNot}>50.000 km</Text>
+              </View>
+            </View>
+
+            <View style={styles.cbmNot}>
+              <View style={styles.tituloebotaoNot}>
+                <Text style={styles.textocbmNot}>Incendio Residencial</Text>
+                <View style={styles.botaoconcluidoNotEmAnd}>
+                  <Text style={styles.textobotaoconcluido}>Acontecendo</Text>
+                </View>
+              </View>
+              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
+              <View style={styles.diaedataNot}>
+                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                <Text style={styles.colorRuaDiaData}>14:30</Text>
+                <Text style={styles.distanciaNotPerto}> 10 km</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
 
       {alertaVisivel && (
         <TouchableWithoutFeedback onPress={() => setAlertaVisivel(false)}>
-          <View style={alertaRisco.overlay}>
+          <View style={styles.overlay}>
             <TouchableWithoutFeedback>
-              <View style={alertaRisco.cartaoAlerta}>
-                <View style={alertaRisco.cabecalhoAlerta}>
-                  <Text style={alertaRisco.textoAlerta}>ALERTA! 🆘</Text>
+              <View style={styles.cartaoAlerta}>
+                <View style={styles.cabecalhoAlerta}>
+                  <Text style={styles.textoAlerta}>ALERTA! 🆘</Text>
                 </View>
-                <View style={alertaRisco.conteudoAlerta}>
-                  <Text style={alertaRisco.textoPrincipal}>
+                <View style={styles.conteudoAlerta}>
+                  <Text style={styles.textoPrincipal}>
                     Se não for possível fazer os primeiros socorros em caso de
                     perigo, não faça! Acione diretamente o corpo de bombeiro.
                     botão de ligar 193
                   </Text>
                   <TouchableOpacity
-                    style={alertaRisco.botaoLigar}
+                    style={styles.botaoLigar}
                     onPress={(e) => {
                       e.stopPropagation();
                       handleLigar();
                     }}
                   >
-                    <Text style={alertaRisco.textoBotao}>Ligar 193</Text>
+                    <Text style={styles.textoBotao}>Ligar 193</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -171,282 +536,67 @@ export default function App() {
           </View>
         </TouchableWithoutFeedback>
       )}
-
-      <View style={styles.caixabege}>
-
-        <View style={styles.headerhistorico}>
-          <Text style={styles.titulohistorico}>Histórico de Ocorrências</Text>
-          <Text style={styles.textohistorico}>Registro das últimas operações realizadas</Text>
-        </View>
-
-          <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={"#8faaff"}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-
-          <View style={styles.caixashistorico}>
-
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Incendio Residencial</Text>
-            <View style={[styles.botaoconcluido]}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>Rua das Flores</Text>
-            <View style={styles.diaedata}>
-            <Text>15/02/2025</Text>
-            <Text>14:30</Text>
-            <Text style={styles.vidassalvas}>3 Vidas salvas!</Text>
-            </View>
-          </View>
-          
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>Av. Central</Text>
-            <View style={styles.diaedata}>
-            <Text>14/02/2025</Text>
-            <Text>09:30</Text>
-            <Text style={styles.vidassalvas}>1 Vida salva!</Text>
-            </View>
-          </View>
-
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Acidente em Trânsito</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>13 de Maio</Text>
-            <View style={styles.diaedata}>
-            <Text>02/01/2025</Text>
-            <Text>12:45</Text>
-            <Text style={styles.vidassalvas}>4 Vidas salvas!</Text>
-            </View>
-          </View>
-
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Incendio Florestal</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>Rua Carolina</Text>
-            <View style={styles.diaedata}>
-            <Text>02/01/2025</Text>
-            <Text>01:00</Text>
-            <Text style={styles.vidassalvas}>5 Vidas salvas!</Text>
-            </View>
-          </View>
-
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>25 de Março</Text>
-            <View style={styles.diaedata}>
-            <Text>01/01/2025</Text>
-            <Text>04:00</Text>
-            <Text style={styles.vidassalvas}>1 Vida salva!</Text>
-            </View>
-          </View>
-
-          <View style={styles.cbm}>
-            <View style={styles.tituloebotao}>
-            <Text style={styles.textocbm}>Resgate em Altura</Text>
-            <View style={styles.botaoconcluido}><Text style={styles.textobotaoconcluido}>Concluído</Text></View>
-            </View>
-            <Text>25 de Março</Text>
-            <View style={styles.diaedata}>
-            <Text>01/01/2025</Text>
-            <Text>04:00</Text>
-            <Text style={styles.vidassalvas}>1 Vida salva!</Text>
-            </View>
-          </View>
-          
-          </View>
-          </ScrollView>
-      </View>
-
-  
-        <View style={styles.estCard}>
-          <View style={styles.cardPQE}>
-            <Text style={styles.textCardPQE}>
-            <Ionicons name="heart-outline" size={24} color="#9b0101"></Ionicons>  Parada Cardiorrespiratória
-            </Text>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
-              <Text style={styles.textListaPQE}>
-                Verifique a consciência da vítima
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>2</Text>
-              <Text style={styles.textListaPQE}>Chame Ajuda (193)</Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>3</Text>
-              <Text style={styles.textListaPQE}>
-                Pocisione as mãos no centro do peito
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>4</Text>
-              <Text style={styles.textListaPQE}>
-                Faça compressões de 5-6 cm de profundidade
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>5</Text>
-              <Text style={styles.textListaPQE}>
-                Mantenha o ritmo de 100-200 compressões/min
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.cardPQE}>
-            <Text style={styles.textCardPQE}>
-            <Ionicons name="warning-outline" size={24} color="#9b0101"></Ionicons>   Queimadas
-            </Text>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
-              <Text style={styles.textListaPQE}>
-              Remova a vítima da fonte de calor 
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>2</Text>
-              <Text style={styles.textListaPQE}>Resfrie com água corrente por 10-20 min</Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>3</Text>
-              <Text style={styles.textListaPQE}>
-              Não aplique gelo diretamente
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>4</Text>
-              <Text style={styles.textListaPQE}>
-              Cubra com pano limpo e úmido
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>5</Text>
-              <Text style={styles.textListaPQE}>
-              Procure atendimento médico
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.cardPQE}>
-            <Text style={styles.textCardPQE}>
-            <Ionicons  name="shield-outline" size={24} color="#9b0101"></Ionicons>   Engasgo
-            </Text>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>1</Text>
-              <Text style={styles.textListaPQE}>
-              Incentive  a tosse se a pessoa conseguir  
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>2</Text>
-              <Text style={styles.textListaPQE}>Aplique 5 pancadas nas costas</Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>3</Text>
-              <Text style={styles.textListaPQE}>
-              Faça a manobra de Heimilich se necessário 
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>4</Text>
-              <Text style={styles.textListaPQE}>
-              Alterne pancadas e compreensões 
-              </Text>
-            </View>
-            <View style={styles.ListaPQE}>
-              <Text style={[styles.bolinhaLista, styles.textBolinha]}>5</Text>
-              <Text style={styles.textListaPQE}>
-              Chame ajuda se não resolver
-              </Text>
-            </View>
-          </View>
-        </View>
-
-          <TouchableOpacity onPress={() => Linking.openURL('tel:193')}>
-        <View style={styles.caixaEmergencia}>
-          <View style={styles.estCardEmergencia}>
-          <Text style={styles.textIcon}> <Ionicons  name="call-outline" size={30} color="#FF9903"></Ionicons> </Text>
-          <View>
-          <Text style={styles.textEmergencia}>Emergência: 193</Text>
-          <Text style={styles.textExpEmergencia}>Em casos de emergência, sempre acione o Corpo de Bombeiros</Text>
-          </View>
-          </View>
-        </View>
-          </TouchableOpacity>
-
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
-
-
-const cabecalhoLayout = StyleSheet.create({
+const createStyles = (theme) =>
+  StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.backgroundColor,
+    // alignItems: "center",
+    // justifyContent: "center",
+    paddingHorizontal: 20,
+  },
   topoCabecalho: {
-    alignItems: "center",
+    // alignItems: "center",
     marginBottom: 20,
   },
   logoImagem: {
     width: 220,
     height: 100,
+    justifyContent: "flex-start",
   },
   subtitulo: {
+    textAlign: "center",
     fontSize: 16,
-    color: "#000",
+    color: theme.color,
   },
-});
-
-const secaoWifi = StyleSheet.create({
+  IconNot:{
+    color: theme.color
+  },
+  logoENot: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 130,
+  },
   cartaoPrincipal: {
-    width: "90%",
-    backgroundColor: "rgba(181, 0, 0, 0.1)",
+    backgroundColor: theme.cartaoPrincipal,
     borderWidth: 1,
-    borderColor: "#dc3545",
-    borderRadius: 8,
+    borderColor: theme.borderColorCP,
+    borderRadius: 12,
     padding: 15,
     marginTop: 20,
-    shadowColor: "#000",
+    shadowColor: theme.shadowColorCP,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 2,
   },
   linhaTitulo: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 5,
   },
-  iconeWifi: {
-    fontSize: 24,
-    marginRight: 10,
-  },
   tituloCartao: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#000",
+    color: theme.color,
   },
   textoDescritivo: {
-    fontSize: 14,
-    color: "#000",
-    marginBottom: 15,
+    fontSize: 15,
+    color: theme.color,
+    marginBottom: 25,
   },
   areaStatusBotao: {
     flexDirection: "row",
@@ -459,45 +609,37 @@ const secaoWifi = StyleSheet.create({
   },
   textoStatus: {
     fontSize: 14,
-    color: "#000",
+    color: theme.color,
     fontWeight: "bold",
     marginRight: 5,
   },
   textoStatusDestaque: {
     fontSize: 14,
     fontWeight: "bold",
-    backgroundColor: "#FF9903",
+    backgroundColor: theme.backgroundColorStatus,
     borderRadius: 6,
-    padding: 8,
+    padding: 2,
+    paddingHorizontal: 10,
     fontSize: 14,
     marginBottom: 1,
-  },
-  statusInativo: {
-    color: "#fff",
-  },
-  statusAtivo: {
-    color: "#fff",
+    color: theme.color,
   },
   botaoAtivar: {
-    backgroundColor: "#dc3545",
-    paddingVertical: 8,
+    backgroundColor: theme.backgroundColorWifi,
+    paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
   },
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
+  textoBotaoWiFi: {
+    color: theme.colorBtnWifi,
   },
-});
-
-const navegacaoInferior = StyleSheet.create({
   containerBotoes: {
     flexDirection: "row",
-    backgroundColor: "#f7f4ea",
-    borderRadius: 15,
+    backgroundColor: theme.Btns,
+    borderRadius: 17,
     justifyContent: "space-between",
     marginTop: 20,
-    width: "90%",
+    padding: 2,
     alignSelf: "center",
   },
   botaoIndividual: {
@@ -506,10 +648,153 @@ const navegacaoInferior = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 9,
     borderRadius: 15,
+    
   },
+  caixabege: {
+    backgroundColor: theme.caixaBegeCinza,
+    //  width: 380,
+    //  height: 600,
+    borderRadius: 20,
+    padding: 23,
+    borderWidth: 1,
+    borderColor: theme.borderColorCaixa,
+    marginTop: 20,
+  },
+  headerhistorico: {
+    marginBottom: 10,
+  },
+  titulohistorico: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: theme.color,
+  },
+  textohistorico: {
+    fontSize: 15,
+    color: theme.color,
+  },
+  cbm: {
+    marginTop: 10,
+    backgroundColor: theme.backgroundColorCbm,
+    width: 330,
+    height: 90,
+    borderRadius: 15,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: theme.borderColorCaixa,
+  },
+  textocbm: {
+    fontWeight: "bold",
+    fontSize: 15,
+    color: theme.color
+  },
+  tituloebotao: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  botaoconcluido: {
+    backgroundColor: theme.backgroundColorBtnCon,
+    width: 90,
+    height: 30,
+    borderRadius: 10,
+    padding: 5,
+    borderColor: theme.borderColorCaixa,
+    borderWidth: 1,
+    // alignItems: "flex-end", // coloca tudo do container à direita
+  },
+  textobotaoconcluido: {
+    textAlign: "center",
+    color: theme.colorP
+  },
+  colorRuaDiaData:{
+    color:theme.color
+  },
+  diaedata: {
+    flexDirection: "row",
+    gap: 48, 
+  },
+  colordiaedata:{
+    color:theme.color
+  },
+  vidassalvas: {
+    color: theme.colorVidas,
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  caixashistorico: {
+    alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 50,
+    paddingHorizontal: 20,
+  },
+
+  estCard: {
+    gap: 30,
+    marginTop: 20,
+  },
+  cardPQE: {
+    backgroundColor: theme.caixaBegeCinza,
+    padding: 25,
+    borderRadius: 15,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: theme.borderColorCaixa,
+  },
+  textCardPQE: {
+    fontWeight: "bold",
+    fontSize: 21,
+    marginBottom: 10,
+    color: theme.color
+  },
+  ListaPQE: {
+    flexDirection: "row",
+    marginTop: 13,
+    gap: 10,
+  },
+  textListaPQE: {
+    fontSize: 16,
+    color: theme.color
+  },
+  bolinhaLista: {
+    backgroundColor: "#9b0101",
+    width: 24,
+    height: 24,
+    borderRadius: 50,
+  },
+  textBolinha: {
+    color: theme.colorBtnWifi,
+    textAlign: "center",
+  },
+
+  caixaEmergencia: {
+    backgroundColor: theme.emergencia,
+    padding: 18,
+    borderRadius: 15,
+    marginTop: 30,
+    borderWidth: 1,
+    borderColor: theme.colorVidas,
+  },
+  estCardEmergencia: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  textIcon: {
+    alignItems: "center",
+    padding: 10,
+  },
+  textEmergencia: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: theme.color
+  },
+  textExpEmergencia:{
+    color: theme.color,
+  },
+
   botaoAtivo: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.BtnAtivo,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -521,25 +806,22 @@ const navegacaoInferior = StyleSheet.create({
   textoAtivo: {
     fontWeight: "bold",
     fontSize: 14,
-    color: "#000",
+    color: theme.color,
   },
   textoInativo: {
     fontSize: 14,
-    color: "#333",
+    color: theme.color,
   },
-});
-
-const alertaRisco = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    backgroundColor: theme.overlay,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 100,
   },
   cartaoAlerta: {
     width: "90%",
-    backgroundColor: "rgba(234, 34, 34, 0.44)",
+    backgroundColor: theme.alert,
     borderRadius: 8,
     paddingHorizontal: 15,
     paddingVertical: 25,
@@ -556,165 +838,96 @@ const alertaRisco = StyleSheet.create({
     marginBottom: 10,
   },
   textoAlerta: {
-    color: "#fff",
+    color: theme.colorBtnWifi,
     fontWeight: "bold",
     fontSize: 20, // Texto grande
-  },
-  textoRisco: {
-    backgroundColor: "#F7C042",
-    color: "#000",
-    fontWeight: "bold",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 14,
-    marginLeft: 8,
   },
   conteudoAlerta: {
     alignItems: "center",
   },
   textoPrincipal: {
-    color: "#fff",
+    color: theme.color,
     fontSize: 14,
     textAlign: "center",
     marginBottom: 15,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   botaoLigar: {
-    backgroundColor: "#FFC107",
+    backgroundColor: theme.colorVidas,
     paddingVertical: 8,
     paddingHorizontal: 30,
     borderRadius: 15,
   },
   textoBotao: {
-    color: "#000",
+    color: theme.colorP,
     fontWeight: "bold",
     fontSize: 16,
   },
-});
-
-  const styles = StyleSheet.create({
-  caixabege: {
-   backgroundColor: '#F7F4EA',
-   width: 380,
-   height: 600,
-   borderRadius: 20,
-   padding: 23,
-   borderWidth: 1,
-   borderColor: "rgba(0, 0, 0, 0.10)",
+  // estNot:{
+  //   flexDirection:"row",
+  // },
+  btnVoltar: {
+    justifyContent: "flex-start",
   },
-  headerhistorico: {
-    marginBottom:10,
+  tituloNotificacao: {
+    fontSize: 35,
+    // fontWeight: "bold",
+    color: theme.color
   },
-  titulohistorico:{
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  textohistorico: {
-    fontSize: 15,
-  },
-  cbm:{
-    marginTop: 10,
-    backgroundColor: "#F7F4EA",
+  cbmNot: {
+    marginTop: 20,
+    backgroundColor: theme.backgroundColorCbm,
     width: 330,
     height: 90,
     borderRadius: 15,
-    padding: 10,
+    padding: 15,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
+    alignSelf:"flex-end"
   },
-  textocbm: {
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-  tituloebotao: {
+  tituloebotaoNot: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  botaoconcluido: {
-    backgroundColor: "#F7F4EA",
+  textocbmNot: {
+    fontWeight: "bold",
+    fontSize: 15,
+    color: theme.color
+  },
+  botaoconcluidoNotCon: {
+    backgroundColor: theme.notCon,
     width: 90,
     height: 30,
     borderRadius: 10,
     padding: 5,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
     borderWidth: 1,
     // alignItems: "flex-end", // coloca tudo do container à direita
   },
-  textobotaoconcluido: {
-    textAlign: "center", 
-  },
-  diaedata: {
-    flexDirection: "row",
-    gap: 48,
-  },
-  vidassalvas: {
-    color: "#FF9903",
+  distanciaNot:{
+    justifyContent:"flex-end",
+    color: theme.colorDis,
     fontWeight: "bold",
     fontSize: 15,
   },
-  caixashistorico:{
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 50,
-    paddingHorizontal: 20,
-  },
-  estCard: {
-    gap: 30,
-  },
-  cardPQE: {
-    backgroundColor: "#F7F4EA",
-    padding: 25,
-    borderRadius: 15,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.15)",
-  },
-  textCardPQE: {
-    fontWeight: "bold",
-    fontSize: 21,
-    marginBottom: 10,
-  },
-  ListaPQE: {
+  diaedataNot: {
     flexDirection: "row",
-    marginTop: 13,
-    gap: 10,
+    gap: 60,
   },
-  textListaPQE: {
-    fontSize: 16,
-  },
-  bolinhaLista: {
-    backgroundColor: "#9b0101",
-    width: 24,
-    height: 24,
-    borderRadius: 50,
-  },
-  textBolinha: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  caixaEmergencia:{
-    backgroundColor:"rgba(255,153,3,0.15)",
-    padding:18,
-    borderRadius: 15,
-    marginTop:30,
+  botaoconcluidoNotEmAnd: {
+    backgroundColor: theme.notEmAnd,
+    width: 90,
+    height: 30,
+    borderRadius: 10,
+    padding: 5,
+    borderColor: theme.borderColorCaixa,
     borderWidth: 1,
-    borderColor: "#FF9903"
+    // alignItems: "flex-end", // coloca tudo do container à direita
   },
-  estCardEmergencia:{
-    flexDirection:"row",
-    gap:10,
-  },
-  textIcon:{
-    alignItems:"center",
-    padding:10
-  },
-  textEmergencia:{
+  distanciaNotPerto:{
+    justifyContent:"flex-end",
+    color: theme.colorVidas,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 15,
   }
-
 });
