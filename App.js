@@ -74,7 +74,7 @@ export default function App() {
                 resizeMode="contain"
               />
               <TouchableOpacity onPress={() => setTelaAtiva("notificacao")}>
-                <Ionicons name="notifications-outline" size={20}></Ionicons>
+                <Ionicons style={styles.IconNot} name="notifications-outline" size={20}></Ionicons>
               </TouchableOpacity>
             </View>
             <Text style={styles.subtitulo}>
@@ -187,10 +187,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>Rua das Flores</Text>
+                    <Text style={styles.colorRuaDiaData} >Rua das Flores</Text>
                     <View style={styles.diaedata}>
-                      <Text>15/02/2025</Text>
-                      <Text>14:30</Text>
+                      <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                      <Text  style={styles.colorRuaDiaData}>14:30</Text>
                       <Text style={styles.vidassalvas}>3 Vidas salvas!</Text>
                     </View>
                   </View>
@@ -204,10 +204,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>Av. Central</Text>
+                    <Text style={styles.colorRuaDiaData}>Av. Central</Text>
                     <View style={styles.diaedata}>
-                      <Text>14/02/2025</Text>
-                      <Text>09:30</Text>
+                      <Text style={styles.colorRuaDiaData}>14/02/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>09:30</Text>
                       <Text style={styles.vidassalvas}>1 Vida salva!</Text>
                     </View>
                   </View>
@@ -221,10 +221,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>13 de Maio</Text>
+                    <Text style={styles.colorRuaDiaData}>13 de Maio</Text>
                     <View style={styles.diaedata}>
-                      <Text>02/01/2025</Text>
-                      <Text>12:45</Text>
+                      <Text style={styles.colorRuaDiaData}>02/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>12:45</Text>
                       <Text style={styles.vidassalvas}>4 Vidas salvas!</Text>
                     </View>
                   </View>
@@ -238,10 +238,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>Rua Carolina</Text>
+                    <Text style={styles.colorRuaDiaData}>Rua Carolina</Text>
                     <View style={styles.diaedata}>
-                      <Text>02/01/2025</Text>
-                      <Text>01:00</Text>
+                      <Text style={styles.colorRuaDiaData}>02/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>01:00</Text>
                       <Text style={styles.vidassalvas}>5 Vidas salvas!</Text>
                     </View>
                   </View>
@@ -255,10 +255,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>25 de Março</Text>
+                    <Text style={styles.colorRuaDiaData}>25 de Março</Text>
                     <View style={styles.diaedata}>
-                      <Text>01/01/2025</Text>
-                      <Text>04:00</Text>
+                      <Text style={styles.colorRuaDiaData}>01/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>04:00</Text>
                       <Text style={styles.vidassalvas}>1 Vida salva!</Text>
                     </View>
                   </View>
@@ -272,10 +272,10 @@ export default function App() {
                         </Text>
                       </View>
                     </View>
-                    <Text>25 de Março</Text>
+                    <Text style={styles.colorRuaDiaData}>25 de Março</Text>
                     <View style={styles.diaedata}>
-                      <Text>01/01/2025</Text>
-                      <Text>04:00</Text>
+                      <Text style={styles.colorRuaDiaData}>01/01/2025</Text>
+                      <Text style={styles.colorRuaDiaData}>04:00</Text>
                       <Text style={styles.vidassalvas}>1 Vida salva!</Text>
                     </View>
                   </View>
@@ -481,10 +481,10 @@ export default function App() {
                   <Text style={styles.textobotaoconcluido}>Concluído</Text>
                 </View>
               </View>
-              <Text>Rua das Flores</Text>
+              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
               <View style={styles.diaedataNot}>
-                <Text>15/02/2025</Text>
-                <Text>14:30</Text>
+                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                <Text style={styles.colorRuaDiaData}>14:30</Text>
                 <Text style={styles.distanciaNot}>50.000 km</Text>
               </View>
             </View>
@@ -496,10 +496,10 @@ export default function App() {
                   <Text style={styles.textobotaoconcluido}>Acontecendo</Text>
                 </View>
               </View>
-              <Text>Rua das Flores</Text>
+              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
               <View style={styles.diaedataNot}>
-                <Text>15/02/2025</Text>
-                <Text>14:30</Text>
+                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
+                <Text style={styles.colorRuaDiaData}>14:30</Text>
                 <Text style={styles.distanciaNotPerto}> 10 km</Text>
               </View>
             </View>
@@ -561,7 +561,10 @@ const createStyles = (theme) =>
   subtitulo: {
     textAlign: "center",
     fontSize: 16,
-    color: theme.colorSub,
+    color: theme.color,
+  },
+  IconNot:{
+    color: theme.color
   },
   logoENot: {
     flexDirection: "row",
@@ -588,11 +591,11 @@ const createStyles = (theme) =>
   tituloCartao: {
     fontSize: 18,
     fontWeight: "bold",
-    color: theme.colorC,
+    color: theme.color,
   },
   textoDescritivo: {
     fontSize: 15,
-    color: theme.colorD,
+    color: theme.color,
     marginBottom: 25,
   },
   areaStatusBotao: {
@@ -606,33 +609,33 @@ const createStyles = (theme) =>
   },
   textoStatus: {
     fontSize: 14,
-    color: theme.colorS,
+    color: theme.color,
     fontWeight: "bold",
     marginRight: 5,
   },
   textoStatusDestaque: {
     fontSize: 14,
     fontWeight: "bold",
-    backgroundColor: "#FF9903",
+    backgroundColor: theme.backgroundColorStatus,
     borderRadius: 6,
     padding: 2,
     paddingHorizontal: 10,
     fontSize: 14,
     marginBottom: 1,
-    color: "#fff",
+    color: theme.color,
   },
   botaoAtivar: {
-    backgroundColor: "#9b0101",
+    backgroundColor: theme.backgroundColorWifi,
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
   },
   textoBotaoWiFi: {
-    color: "#fff",
+    color: theme.colorBtnWifi,
   },
   containerBotoes: {
     flexDirection: "row",
-    backgroundColor: "#f7f4ea",
+    backgroundColor: theme.Btns,
     borderRadius: 17,
     justifyContent: "space-between",
     marginTop: 20,
@@ -645,15 +648,16 @@ const createStyles = (theme) =>
     paddingVertical: 10,
     paddingHorizontal: 9,
     borderRadius: 15,
+    
   },
   caixabege: {
-    backgroundColor: "#F7F4EA",
+    backgroundColor: theme.caixaBegeCinza,
     //  width: 380,
     //  height: 600,
     borderRadius: 20,
     padding: 23,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.10)",
+    borderColor: theme.borderColorCaixa,
     marginTop: 20,
   },
   headerhistorico: {
@@ -662,47 +666,57 @@ const createStyles = (theme) =>
   titulohistorico: {
     fontWeight: "bold",
     fontSize: 18,
+    color: theme.color,
   },
   textohistorico: {
     fontSize: 15,
+    color: theme.color,
   },
   cbm: {
     marginTop: 10,
-    backgroundColor: "#F7F4EA",
+    backgroundColor: theme.backgroundColorCbm,
     width: 330,
     height: 90,
     borderRadius: 15,
     padding: 15,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
   },
   textocbm: {
     fontWeight: "bold",
     fontSize: 15,
+    color: theme.color
   },
   tituloebotao: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   botaoconcluido: {
-    backgroundColor: "#F7F4EA",
+    backgroundColor: theme.backgroundColorBtnCon,
     width: 90,
     height: 30,
     borderRadius: 10,
     padding: 5,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
     borderWidth: 1,
     // alignItems: "flex-end", // coloca tudo do container à direita
   },
   textobotaoconcluido: {
     textAlign: "center",
+    color: theme.colorP
+  },
+  colorRuaDiaData:{
+    color:theme.color
   },
   diaedata: {
     flexDirection: "row",
-    gap: 48,
+    gap: 48, 
+  },
+  colordiaedata:{
+    color:theme.color
   },
   vidassalvas: {
-    color: "#FF9903",
+    color: theme.colorVidas,
     fontWeight: "bold",
     fontSize: 15,
   },
@@ -720,17 +734,18 @@ const createStyles = (theme) =>
     marginTop: 20,
   },
   cardPQE: {
-    backgroundColor: "#F7F4EA",
+    backgroundColor: theme.caixaBegeCinza,
     padding: 25,
     borderRadius: 15,
     elevation: 5,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.15)",
+    borderColor: theme.borderColorCaixa,
   },
   textCardPQE: {
     fontWeight: "bold",
     fontSize: 21,
     marginBottom: 10,
+    color: theme.color
   },
   ListaPQE: {
     flexDirection: "row",
@@ -739,6 +754,7 @@ const createStyles = (theme) =>
   },
   textListaPQE: {
     fontSize: 16,
+    color: theme.color
   },
   bolinhaLista: {
     backgroundColor: "#9b0101",
@@ -747,17 +763,17 @@ const createStyles = (theme) =>
     borderRadius: 50,
   },
   textBolinha: {
-    color: "#fff",
+    color: theme.colorBtnWifi,
     textAlign: "center",
   },
 
   caixaEmergencia: {
-    backgroundColor: "rgba(255,153,3,0.15)",
+    backgroundColor: theme.emergencia,
     padding: 18,
     borderRadius: 15,
     marginTop: 30,
     borderWidth: 1,
-    borderColor: "#FF9903",
+    borderColor: theme.colorVidas,
   },
   estCardEmergencia: {
     flexDirection: "row",
@@ -770,11 +786,15 @@ const createStyles = (theme) =>
   textEmergencia: {
     fontWeight: "bold",
     fontSize: 16,
+    color: theme.color
+  },
+  textExpEmergencia:{
+    color: theme.color,
   },
 
   botaoAtivo: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.BtnAtivo,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -786,22 +806,22 @@ const createStyles = (theme) =>
   textoAtivo: {
     fontWeight: "bold",
     fontSize: 14,
-    color: "#000",
+    color: theme.color,
   },
   textoInativo: {
     fontSize: 14,
-    color: "#333",
+    color: theme.color,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    backgroundColor: theme.overlay,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 100,
   },
   cartaoAlerta: {
     width: "90%",
-    backgroundColor: "rgba(234, 34, 34, 0.44)",
+    backgroundColor: theme.alert,
     borderRadius: 8,
     paddingHorizontal: 15,
     paddingVertical: 25,
@@ -818,38 +838,28 @@ const createStyles = (theme) =>
     marginBottom: 10,
   },
   textoAlerta: {
-    color: "#fff",
+    color: theme.colorBtnWifi,
     fontWeight: "bold",
     fontSize: 20, // Texto grande
-  },
-  textoRisco: {
-    backgroundColor: "#F7C042",
-    color: "#000",
-    fontWeight: "bold",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 14,
-    marginLeft: 8,
   },
   conteudoAlerta: {
     alignItems: "center",
   },
   textoPrincipal: {
-    color: "#fff",
+    color: theme.color,
     fontSize: 14,
     textAlign: "center",
     marginBottom: 15,
     // fontWeight: "bold",
   },
   botaoLigar: {
-    backgroundColor: "#FFC107",
+    backgroundColor: theme.colorVidas,
     paddingVertical: 8,
     paddingHorizontal: 30,
     borderRadius: 15,
   },
   textoBotao: {
-    color: "#000",
+    color: theme.colorP,
     fontWeight: "bold",
     fontSize: 16,
   },
@@ -862,16 +872,17 @@ const createStyles = (theme) =>
   tituloNotificacao: {
     fontSize: 35,
     // fontWeight: "bold",
+    color: theme.color
   },
   cbmNot: {
     marginTop: 20,
-    backgroundColor: "#F7F4EA",
+    backgroundColor: theme.backgroundColorCbm,
     width: 330,
     height: 90,
     borderRadius: 15,
     padding: 15,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
     alignSelf:"flex-end"
   },
   tituloebotaoNot: {
@@ -881,20 +892,21 @@ const createStyles = (theme) =>
   textocbmNot: {
     fontWeight: "bold",
     fontSize: 15,
+    color: theme.color
   },
   botaoconcluidoNotCon: {
-    backgroundColor: "#84994F",
+    backgroundColor: theme.notCon,
     width: 90,
     height: 30,
     borderRadius: 10,
     padding: 5,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
     borderWidth: 1,
     // alignItems: "flex-end", // coloca tudo do container à direita
   },
   distanciaNot:{
     justifyContent:"flex-end",
-    color: "#B12C00",
+    color: theme.colorDis,
     fontWeight: "bold",
     fontSize: 15,
   },
@@ -902,28 +914,19 @@ const createStyles = (theme) =>
     flexDirection: "row",
     gap: 60,
   },
-  botaoconcluidoNotCon: {
-    backgroundColor: "#84994F",
+  botaoconcluidoNotEmAnd: {
+    backgroundColor: theme.notEmAnd,
     width: 90,
     height: 30,
     borderRadius: 10,
     padding: 5,
-    borderColor: "rgba(0, 0, 0, 0.30)",
-    borderWidth: 1,
-    // alignItems: "flex-end", // coloca tudo do container à direita
-  }, botaoconcluidoNotEmAnd: {
-    backgroundColor: "#FFF287",
-    width: 90,
-    height: 30,
-    borderRadius: 10,
-    padding: 5,
-    borderColor: "rgba(0, 0, 0, 0.30)",
+    borderColor: theme.borderColorCaixa,
     borderWidth: 1,
     // alignItems: "flex-end", // coloca tudo do container à direita
   },
   distanciaNotPerto:{
     justifyContent:"flex-end",
-    color: "#FF9013",
+    color: theme.colorVidas,
     fontWeight: "bold",
     fontSize: 15,
   }
