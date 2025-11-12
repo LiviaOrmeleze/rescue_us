@@ -21,6 +21,10 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "./hooks/useTheme";
+import { EuSouScreen } from "./components/EuSouScreen";
+import { EntrarBBScreen } from "./components/EntrarBBScreen";
+import { EntrarScreen } from "./components/EntrarScreen";
+import { CadastrarScreen } from "./components/CadastrarScreen";
 
 export default function App() {
   const [wifiAtivado, setWifiAtivado] = useState(false);
@@ -33,7 +37,6 @@ export default function App() {
 
 
   const [email, setEmail] = useState("");
- 
   const [senha, setSenha] = useState("");
 
   const styles = createStyles(useTheme());
@@ -61,193 +64,31 @@ export default function App() {
       <StatusBar style="auto" />
 
       {telaAtiva === "euSou" && (
-        <View>
-           <Image
-            source={logoSource}
-            style={styles.logoEntrar}
-            resizeMode="contain"
-          />
-          <Text style={styles.tituloBV}>Bem-Vindo ao Rescue Us!</Text>
-          <View style={styles.caixabege}>
-            <Text style={styles.entrar}>O que você é?</Text>
-
-            <View style={styles.campoEuSou}>
-              
-            <TouchableOpacity style={styles.cardEuSou} onPress={() => setTelaAtiva("entrarBB")}>
-                <Text style={styles.textEuSou}>Eu sou Bombeiro</Text>
-                <Ionicons style={styles.iconEuSou} name="flame-outline" size={25}></Ionicons>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.cardEuSou} onPress={() => setTelaAtiva("entrar")}>
-                <Text style={styles.textEuSou}>Eu sou Colaborador</Text>
-                <Ionicons style={styles.iconEuSou} name="person-outline" size={25}></Ionicons>
-              </TouchableOpacity>
-            </View>
-          </View>
-         
-        </View>
+       <EuSouScreen
+          logoSource={logoSource}
+          entrarBB={"entrarBB"}
+          entrar={"entrar"}
+        />
             )}
 
             {telaAtiva === "entrarBB" && (
-              <View>
-                 <Image
-            source={logoSource}
-            style={styles.logoEntrar}
-            resizeMode="contain"
-          />
-          <Text style={styles.tituloBV}>Bem-Vindo ao Rescue Us!</Text>
-          <View style={styles.caixabege}>
-            <Text style={styles.entrar}>Entrar</Text>
-            <View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>E-mail</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  placeholder="Digite seu e-mail"
-                  keyboardType="email-address"
-                />
-              </View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>Senha</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={senha}
-                  onChangeText={(text) => setSenha(text)}
-                  placeholder="Digite sua senha"
-                  secureTextEntry={true}
-                />
-              </View>
-
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>Identificar Bombeiro</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={senha}
-                  onChangeText={(text) => setSenha(text)}
-                  placeholder="Digite sua senha"
-                  secureTextEntry={true}
-                />
-              </View>
-
-              <View style={styles.Link}>
-                <TouchableOpacity onPress={() => setTelaAtiva("cadastrar")}>
-                  <Text style={styles.textLink}>
-                    Se não tem conta, cadastre-se
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={styles.btn}>
-            <TouchableOpacity style={styles.btnEnteCad}>
-              <Text style={styles.TextBtnEnteCad}>Entrar</Text>
-            </TouchableOpacity>
-          </View>
-              </View>
+            <EntrarBBScreen
+              logoSource={logoSource}
+              cadastrar={"cadastrar"}
+            />
             )}
 
       {telaAtiva === "entrar" && (
-        <View>
-          <Image
-            source={logoSource}
-            style={styles.logoEntrar}
-            resizeMode="contain"
-          />
-          <Text style={styles.tituloBV}>Bem-Vindo ao Rescue Us!</Text>
-          <View style={styles.caixabege}>
-            <Text style={styles.entrar}>Entrar</Text>
-            <View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>E-mail</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  placeholder="Digite seu e-mail"
-                  keyboardType="email-address"
-                />
-              </View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>Senha</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={senha}
-                  onChangeText={(text) => setSenha(text)}
-                  placeholder="Digite sua senha"
-                  secureTextEntry={true}
-                />
-              </View>
-
-              <View style={styles.Link}>
-                <TouchableOpacity onPress={() => setTelaAtiva("cadastrar")}>
-                  <Text style={styles.textLink}>
-                    Se não tem conta, cadastre-se
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={styles.btn}>
-            <TouchableOpacity style={styles.btnEnteCad}>
-              <Text style={styles.TextBtnEnteCad}>Entrar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+       <EntrarScreen
+       logoSource={logoSource}
+       cadastrar={"cadastrar"}
+       />
       )}
       {telaAtiva === "cadastrar" && (
-        <View>
-          <Image
-            source={logoSource}
-            style={styles.logoEntrar}
-            resizeMode="contain"
-          />
-          <Text style={styles.tituloBV}>Bem-Vindo ao Rescue Us!</Text>
-          <View style={styles.caixabege}>
-            <Text style={styles.entrar}>Cadastrar</Text>
-            <View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>E-mail</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  placeholder="Digite seu e-mail"
-                  keyboardType="email-address"
-                />
-              </View>
-              <View style={styles.estDados}>
-                <Text style={styles.Prin}>Senha</Text>
-
-                <TextInput
-                  style={styles.Seng}
-                  value={senha}
-                  onChangeText={(text) => setSenha(text)}
-                  placeholder="Digite sua senha"
-                  secureTextEntry={true}
-                />
-              </View>
-
-              <View style={styles.Link}>
-                <TouchableOpacity onPress={() => setTelaAtiva("entrar")}>
-                  <Text style={styles.textLink}>Se já tem conta, entre</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={styles.btn}>
-            <TouchableOpacity style={styles.btnEnteCad}>
-              <Text style={styles.TextBtnEnteCad}>Cadastrar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+       <CadastrarScreen
+       logoSource={logoSource}
+       entrar={"entrar"}
+       />
       )}
 
       {telaAtiva === "home" && (
@@ -821,10 +662,7 @@ const createStyles = (theme) =>
       fontWeight: "bold",
     },
     btn: {
-      //   flexDirection: "row",
-      //   justifyContent: "space-between",
       marginTop: 30,
-      //   margin: 5,
     },
     TextBtnEnteCad: {
       fontSize: 20,
@@ -940,8 +778,6 @@ const createStyles = (theme) =>
     },
     caixabege: {
       backgroundColor: theme.caixaBegeCinza,
-      //  width: 380,
-      //  height: 600,
       borderRadius: 20,
       padding: 23,
       borderWidth: 1,
@@ -1278,25 +1114,4 @@ const createStyles = (theme) =>
     textLink: {
       color: theme.color,
     },
-    campoEuSou:{
-      marginTop:15,
-      gap:15,
-      flexDirection: "row",
-     justifyContent:"center"
-    },
-    cardEuSou:{
-      backgroundColor: theme.color,
-      padding: 12,
-      alignItems:"center",
-      borderRadius:9,
-      paddingHorizontal:15,
-      borderWidth:2,
-      borderColor:theme.alert
-    },
-    textEuSou:{
-      fontSize: 16,
-    },
-    iconEuSou:{
-      marginTop:10,
-    }
   });
