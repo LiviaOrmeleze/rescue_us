@@ -15,7 +15,7 @@ import {
 // Importe as imagens da logo
 import LogoDark from "./assets/LogoDark.png";
 import LogoLight from "./assets/LogoLight.png";
-import Bombeiro from "./assets/Chama o bombeiro___.jpg";
+import bombeiro from "./assets/Chama o bombeiro___.jpg";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,6 +25,7 @@ import { EuSouScreen } from "./components/EuSouScreen";
 import { EntrarBBScreen } from "./components/EntrarBBScreen";
 import { EntrarScreen } from "./components/EntrarScreen";
 import { CadastrarScreen } from "./components/CadastrarScreen";
+import { PerfilScreen } from "./components/PerfilScreen";
 
 export default function App() {
   const [wifiAtivado, setWifiAtivado] = useState(false);
@@ -33,11 +34,10 @@ export default function App() {
   const [ativo, setAtivo] = useState("historico");
   const [alertaVisivel, setAlertaVisivel] = useState(false);
   // const [mostrarPrimeirosSOS, setMostrarPrimeirosSOS] = useState(false);
-  const [telaAtiva, setTelaAtiva] = useState("euSou");
+  const [telaAtiva, setTelaAtiva] = useState("home");
 
-
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [senha, setSenha] = useState("");
 
   const styles = createStyles(useTheme());
 
@@ -64,31 +64,32 @@ export default function App() {
       <StatusBar style="auto" />
 
       {telaAtiva === "euSou" && (
-       <EuSouScreen
+        <EuSouScreen
           logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
           entrarBB={"entrarBB"}
           entrar={"entrar"}
         />
-            )}
+      )}
 
-            {telaAtiva === "entrarBB" && (
-            <EntrarBBScreen
-              logoSource={logoSource}
-              cadastrar={"cadastrar"}
-            />
-            )}
+      {telaAtiva === "entrarBB" && (
+        <EntrarBBScreen 
+        logoSource={logoSource} 
+        setTelaAtiva={setTelaAtiva}
+        cadastrar={"cadastrar"} />
+      )}
 
       {telaAtiva === "entrar" && (
-       <EntrarScreen
-       logoSource={logoSource}
-       cadastrar={"cadastrar"}
-       />
+        <EntrarScreen 
+        logoSource={logoSource} 
+        setTelaAtiva={setTelaAtiva}
+        cadastrar={"cadastrar"} />
       )}
       {telaAtiva === "cadastrar" && (
-       <CadastrarScreen
-       logoSource={logoSource}
-       entrar={"entrar"}
-       />
+        <CadastrarScreen 
+        logoSource={logoSource} 
+        setTelaAtiva={setTelaAtiva}
+        entrar={"entrar"} />
       )}
 
       {telaAtiva === "home" && (
@@ -511,47 +512,12 @@ export default function App() {
       )}
 
       {telaAtiva === "perfil" && (
-        <View>
-          <View style={styles.estCabPerfil}>
-            <TouchableOpacity
-              onPress={() => setTelaAtiva("home")}
-              style={styles.btnVoltar}
-            >
-              <Ionicons
-                style={styles.IconNot}
-                name="arrow-back-circle-outline"
-                size={30}
-              ></Ionicons>
-            </TouchableOpacity>
-            <Image
-              source={logoSource}
-              style={styles.logoPerfil}
-              resizeMode="contain"
-            />
-          </View>
-          <View style={styles.estPerfil}>
-            <Image source={Bombeiro} style={styles.bombeiro} />
-            <Text style={styles.nomePerfil}>Bombeiro da Eliana</Text>
-          </View>
-          <View>
-            <View style={styles.estDados}>
-              <Text style={styles.Prin}>Nome</Text>
-              <Text style={styles.Seng}></Text>
-            </View>
-            <View style={styles.estDados}>
-              <Text style={styles.Prin}>E-mail</Text>
-              <Text style={styles.Seng}>chama_o_bombeiro@gmail.com</Text>
-            </View>
-            <View style={styles.estDados}>
-              <Text style={styles.Prin}>Telefone</Text>
-              <Text style={styles.Seng}>(14)77921-1221</Text>
-            </View>
-            <View style={styles.estDados}>
-              <Text style={styles.Prin}>Senha</Text>
-              <Text style={styles.Seng}>{"•".repeat(8)}</Text>
-            </View>
-          </View>
-        </View>
+       <PerfilScreen
+       logoSource={logoSource} 
+        setTelaAtiva={setTelaAtiva}
+        home={"home"}
+        Bombeiro={bombeiro}
+       />
       )}
 
       {telaAtiva === "notificacao" && (

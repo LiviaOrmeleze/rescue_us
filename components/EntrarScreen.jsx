@@ -1,10 +1,19 @@
-import React from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useTheme } from "../hooks/useTheme";
 
 export function EntrarScreen(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const styles = createStyles(useTheme());
+  
 
   return (
     <View>
@@ -25,6 +34,7 @@ export function EntrarScreen(props) {
               value={email}
               onChangeText={(text) => setEmail(text)}
               placeholder="Digite seu e-mail"
+              placeholderTextColor="#888"
               keyboardType="email-address"
             />
           </View>
@@ -36,12 +46,13 @@ export function EntrarScreen(props) {
               value={senha}
               onChangeText={(text) => setSenha(text)}
               placeholder="Digite sua senha"
+              placeholderTextColor="#888"
               secureTextEntry={true}
             />
           </View>
 
           <View style={styles.Link}>
-            <TouchableOpacity onPress={() => setTelaAtiva(props.cadastrar)}>
+            <TouchableOpacity onPress={() => props.setTelaAtiva(props.cadastrar)}>
               <Text style={styles.textLink}>Se não tem conta, cadastre-se</Text>
             </TouchableOpacity>
           </View>
@@ -56,60 +67,64 @@ export function EntrarScreen(props) {
   );
 }
 
-const createStyles = (theme) => 
-    StyleSheet.create({
-        logoEntrar: {
-            width: 220,
-            height: 100,
-          },
-          tituloBV: {
-            fontSize: 30,
-            color: theme.color,
-            marginTop: 50,
-            marginBottom: 15,
-          },
-          entrar: {
-            fontSize: 23,
-            color: theme.color,
-            fontWeight: "bold",
-          },
-          caixabege: {
-            backgroundColor: theme.caixaBegeCinza,
-            borderRadius: 20,
-            padding: 23,
-            borderWidth: 1,
-            borderColor: theme.borderColorCaixa,
-            marginTop: 20,
-          },
-          estDados: {
-            marginTop: 20,
-          },
-          Prin: {
-            color: theme.color,
-            fontSize: 15,
-            marginBottom: 8,
-          },
-          Seng: {
-            color: theme.color,
-            fontSize: 15,
-            padding: 12,
-            borderRadius: 12,
-            borderWidth: 2,
-            borderColor: theme.borderColorCaixa,
-          },
-          btn: {
-            marginTop: 30,
-          },
-          btnEnteCad: {
-            borderRadius: 16,
-            padding: 10,
-            borderWidth: 1,
-            borderColor: theme.color,
-            backgroundColor: theme.alert,
-          },
-          TextBtnEnteCad: {
-            fontSize: 20,
-            textAlign: "center",
-            color: theme.color,
-          }
-    })
+const createStyles = (theme) =>
+  StyleSheet.create({
+    logoEntrar: {
+      width: 220,
+      height: 100,
+    },
+    tituloBV: {
+      fontSize: 30,
+      color: theme.color,
+      marginTop: 50,
+      marginBottom: 15,
+    },
+    entrar: {
+      fontSize: 23,
+      color: theme.color,
+      fontWeight: "bold",
+    },
+    caixabege: {
+      backgroundColor: theme.caixaBegeCinza,
+      borderRadius: 20,
+      padding: 23,
+      borderWidth: 1,
+      borderColor: theme.borderColorCaixa,
+      marginTop: 20,
+    },
+    estDados: {
+      marginTop: 20,
+    },
+    Prin: {
+      color: theme.color,
+      fontSize: 15,
+      marginBottom: 8,
+    },
+    Seng: {
+      color: theme.color,
+      fontSize: 15,
+      padding: 12,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: theme.borderColorCaixa,
+    },
+    btn: {
+      marginTop: 30,
+    },
+    btnEnteCad: {
+      borderRadius: 16,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme.color,
+      backgroundColor: theme.alert,
+    },
+    TextBtnEnteCad: {
+      fontSize: 20,
+      textAlign: "center",
+      color: theme.color,
+    },
+    textLink:{
+      marginTop: 14,
+      color: theme.color
+    }, 
+  });

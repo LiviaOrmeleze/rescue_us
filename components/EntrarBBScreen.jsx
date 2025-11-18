@@ -1,6 +1,8 @@
-import React from "react";
-import { TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
+import { useTheme } from "../hooks/useTheme";
+import { Picker } from "@react-native-picker/picker";
 
 export function EntrarBBScreen(props) {
   const styles = createStyles(useTheme());
@@ -8,6 +10,7 @@ export function EntrarBBScreen(props) {
   const [senha, setSenha] = useState("");
   const [tipoIdentificador, setTipoIdentificador] = useState(""); // Valor inicial do select
   const [identificador, setIdentificador] = useState(""); // Valor do identificador numérico
+  
 
   return (
     <View>
@@ -28,6 +31,7 @@ export function EntrarBBScreen(props) {
               value={email}
               onChangeText={(text) => setEmail(text)}
               placeholder="Digite seu e-mail"
+              placeholderTextColor="#888"
               keyboardType="email-address"
             />
           </View>
@@ -39,6 +43,7 @@ export function EntrarBBScreen(props) {
               value={senha}
               onChangeText={(text) => setSenha(text)}
               placeholder="Digite sua senha"
+              placeholderTextColor="#888"
               secureTextEntry={true}
             />
           </View>
@@ -46,31 +51,36 @@ export function EntrarBBScreen(props) {
           <View style={styles.estDados}>
             <Text style={styles.Prin}>Identificar Bombeiro</Text>
             {/* <View style={styles.identificadorContainer}> */}
-              {/* Select para PM ou Bombeiro */}
+            {/* Select para PM ou Bombeiro */}
+            <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={tipoIdentificador}
                 onValueChange={(itemValue) => setTipoIdentificador(itemValue)}
-                style={styles.selectIdentificador}
+                style={styles.picker} // Aplica estilos internos ao texto do Picker
               >
                 <Picker.Item label="PM" value="PM" />
                 <Picker.Item label="RE" value="RE" />
               </Picker>
+            </View>
 
-              {/* Input para o identificador numérico */}
-              <TextInput
-                style={styles.Seng}
-                value={identificador}
-                onChangeText={(text) => setIdentificador(text)}
-                placeholder="xxxxxx-x"
-                keyboardType="numeric" // Teclado numérico
-                maxLength={8} // Limita o número de caracteres
-              />
+           
+
+            {/* Input para o identificador numérico */}
+            <TextInput
+              style={styles.Seng}
+              value={identificador}
+              onChangeText={(text) => setIdentificador(text)}
+              placeholderTextColor="#888"
+              placeholder="xxxxxx-x"
+              keyboardType="numeric" // Teclado numérico
+              maxLength={8} // Limita o número de caracteres
+            />
             {/* </View> */}
           </View>
 
           <View style={styles.Link}>
-            <TouchableOpacity onPress={() => setTelaAtiva(props.cadastrar)}>
-              <Text style={styles.textLink}>Se não tem conta, cadastre-se</Text>
+            <TouchableOpacity onPress={() => props.setTelaAtiva(props.cadastrar)}>
+              <Text style={styles.textLink}>Se não tiver conta, cadastre-se :) </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -84,7 +94,7 @@ export function EntrarBBScreen(props) {
   );
 }
 
-const createStyles = (theme) => 
+const createStyles = (theme) =>
   StyleSheet.create({
     logoEntrar: {
       width: 220,
@@ -140,4 +150,23 @@ const createStyles = (theme) =>
       textAlign: "center",
       color: theme.color,
     },
+    selecionar:{
+      color: theme.color
+    },
+    textLink:{
+      marginTop: 14,
+      color: theme.color
+    },
+    pickerContainer: {
+      borderWidth: 2, // Adiciona a borda
+      borderColor: theme.borderColorCaixa, // Cor da borda
+      borderRadius: 12, // Bordas arredondadas
+      justifyContent: "center", // Centraliza o texto do Picker verticalmente
+      marginBottom: 8
+    },
+    picker: {
+      color: theme.color, // Cor do texto do Picker
+      fontSize: 15, // Tamanho da fonte
+    },
+ 
   });
