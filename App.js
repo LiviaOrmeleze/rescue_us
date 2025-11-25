@@ -67,29 +67,50 @@ export default function App() {
         <EuSouScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
-          entrarBB={"entrarBB"}
-          entrar={"entrar"}
+          entrarBB={"perfilBB"}
+          entrar={"perfil"}
+        />
+      )}
+
+      {telaAtiva === "perfil" && (
+        <PerfilScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          home={"home"}
+          Bombeiro={bombeiro}
+        />
+      )}
+
+      {telaAtiva === "perfilBB" && (
+        <PerfilScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          home={"home"}
+          Bombeiro={bombeiro}
         />
       )}
 
       {telaAtiva === "entrarBB" && (
-        <EntrarBBScreen 
-        logoSource={logoSource} 
-        setTelaAtiva={setTelaAtiva}
-        cadastrar={"cadastrar"} />
+        <EntrarBBScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          cadastrar={"cadastrar"}
+        />
       )}
 
       {telaAtiva === "entrar" && (
-        <EntrarScreen 
-        logoSource={logoSource} 
-        setTelaAtiva={setTelaAtiva}
-        cadastrar={"cadastrar"} />
+        <EntrarScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          cadastrar={"cadastrar"}
+        />
       )}
       {telaAtiva === "cadastrar" && (
-        <CadastrarScreen 
-        logoSource={logoSource} 
-        setTelaAtiva={setTelaAtiva}
-        entrar={"entrar"} />
+        <CadastrarScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          entrar={"entrar"}
+        />
       )}
 
       {telaAtiva === "home" && (
@@ -509,15 +530,6 @@ export default function App() {
             </View>
           </TouchableOpacity>
         </ScrollView>
-      )}
-
-      {telaAtiva === "perfil" && (
-       <PerfilScreen
-       logoSource={logoSource} 
-        setTelaAtiva={setTelaAtiva}
-        home={"home"}
-        Bombeiro={bombeiro}
-       />
       )}
 
       {telaAtiva === "notificacao" && (
