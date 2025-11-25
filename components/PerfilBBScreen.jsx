@@ -6,8 +6,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { View } from "react-native";
+
 import { useTheme } from "../hooks/useTheme";
 
 export function PerfilScreen(props) {
