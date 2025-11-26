@@ -1,23 +1,28 @@
-import React from "react";
-import { RefreshControl, ScrollView, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useTheme } from "../hooks/useTheme";
 
 export function HistoricoScreen(props) {
   const styles = createStyles(useTheme());
-   const [refreshing, setRefreshing] = useState(false);
-  
-    const onRefresh = async () => {
-      setRefreshing(true);
-      try {
-        console.log("🔄 Atualizando dados...");
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-      } catch (error) {
-        console.error("Erro durante refresh:", error);
-      } finally {
-        setRefreshing(false);
-      }
-    };
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      console.log("🔄 Atualizando dados...");
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    } catch (error) {
+      console.error("Erro durante refresh:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <View style={styles.caixabege}>
@@ -135,68 +140,77 @@ export function HistoricoScreen(props) {
   );
 }
 
-const createStyles = (theme) => StyleSheet.create({
+const createStyles = (theme) =>
+  StyleSheet.create({
     caixashistorico: {
-        alignItems: "center",
-        justifyContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 50,
-        paddingHorizontal: 20,
-      },
-      cbm: {
-        marginTop: 10,
-        backgroundColor: theme.backgroundColorCbm,
-        width: 330,
-        height: 90,
-        borderRadius: 15,
-        padding: 15,
+      alignItems: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 50,
+      paddingHorizontal: 20,
+    },
+    caixabege: {
+        backgroundColor: theme.caixaBegeCinza,
+        borderRadius: 20,
+        padding: 23,
         borderWidth: 1,
         borderColor: theme.borderColorCaixa,
+        marginTop: 20,
       },
-      textocbm: {
-        fontWeight: "bold",
-        fontSize: 15,
-        color: theme.color,
-      },
-      tituloebotao: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-      },
-      botaoconcluido: {
-        backgroundColor: theme.backgroundColorBtnCon,
-        width: 90,
-        height: 30,
-        borderRadius: 10,
-        padding: 5,
-        borderColor: theme.borderColorCaixa,
-        borderWidth: 1,
-        // alignItems: "flex-end", // coloca tudo do container à direita
-      },
-      textobotaoconcluido: {
-        textAlign: "center",
-        color: theme.color,
-      },
-      textobotaoconcluidoNot: {
-        textAlign: "center",
-        color: theme.colorP,
-      },
-      colorRuaDiaData: {
-        color: theme.color,
-      },
-      diaedata: {
-        flexDirection: "row",
-        gap: 48,
-      },
-      colordiaedata: {
-        color: theme.color,
-      },
-      vidassalvas: {
-        color: theme.colorVidas,
-        fontWeight: "bold",
-        fontSize: 15,
-      },
-       headerhistorico: {
+    cbm: {
+      marginTop: 10,
+      backgroundColor: theme.backgroundColorCbm,
+      width: 330,
+      height: 90,
+      borderRadius: 15,
+      padding: 15,
+      borderWidth: 1,
+      borderColor: theme.borderColorCaixa,
+    },
+    textocbm: {
+      fontWeight: "bold",
+      fontSize: 15,
+      color: theme.color,
+    },
+    tituloebotao: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    botaoconcluido: {
+      backgroundColor: theme.backgroundColorBtnCon,
+      width: 90,
+      height: 30,
+      borderRadius: 10,
+      padding: 5,
+      borderColor: theme.borderColorCaixa,
+      borderWidth: 1,
+      // alignItems: "flex-end", // coloca tudo do container à direita
+    },
+    textobotaoconcluido: {
+      textAlign: "center",
+      color: theme.color,
+    },
+    textobotaoconcluidoNot: {
+      textAlign: "center",
+      color: theme.colorP,
+    },
+    colorRuaDiaData: {
+      color: theme.color,
+    },
+    diaedata: {
+      flexDirection: "row",
+      gap: 48,
+    },
+    colordiaedata: {
+      color: theme.color,
+    },
+    vidassalvas: {
+      color: theme.colorVidas,
+      fontWeight: "bold",
+      fontSize: 15,
+    },
+    headerhistorico: {
       marginBottom: 10,
     },
     titulohistorico: {
@@ -208,4 +222,4 @@ const createStyles = (theme) => StyleSheet.create({
       fontSize: 15,
       color: theme.color,
     },
-});
+  });

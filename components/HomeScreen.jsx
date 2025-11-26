@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
+  Linking,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -9,11 +10,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTheme } from "../hooks/useTheme";
+import { HistoricoScreen } from "./HistoricoScreen";
+import { SocorrosScreen } from "./SocorrosScreen";
 
 export function HomeScreen(props) {
   const styles = createStyles(useTheme());
   const [refreshing, setRefreshing] = useState(false);
   const [wifiAtivado, setWifiAtivado] = useState(false);
+  const [ativo, setAtivo] = useState("historico");
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -39,7 +44,7 @@ export function HomeScreen(props) {
       }
       showsVerticalScrollIndicator={false}
     >
-      <View >
+      <View>
         <View style={styles.logoENot}>
           <TouchableOpacity onPress={() => props.setTelaAtiva(props.perfil)}>
             <Ionicons
@@ -53,7 +58,9 @@ export function HomeScreen(props) {
             style={styles.logoImagem}
             resizeMode="contain"
           />
-          <TouchableOpacity onPress={() => props.setTelaAtiva(props.notificacao)}>
+          <TouchableOpacity
+            onPress={() => props.setTelaAtiva(props.notificacao)}
+          >
             <Ionicons
               style={styles.IconNot}
               name="notifications-outline"
@@ -102,8 +109,8 @@ export function HomeScreen(props) {
             ativo === "historico" && styles.botaoAtivo,
           ]}
           onPress={() => {
-            props.setAtivo(props.historico);
-            setAlertaVisivel(false);
+            setAtivo("historico");
+            props.setAlertaVisivel(false);
           }}
         >
           <Text
@@ -121,8 +128,7 @@ export function HomeScreen(props) {
             ativo === "socorros" && styles.botaoAtivo,
           ]}
           onPress={() => {
-            props.setAtivo(props.socorros);
-            // setMostrarPrimeirosSOS(!mostrarPrimeirosSOS);
+            setAtivo("socorros");
             props.setAlertaVisivel(true);
           }}
         >
@@ -136,6 +142,9 @@ export function HomeScreen(props) {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {ativo === "historico" && (<HistoricoScreen />)}
+      {ativo === "socorros" && (<SocorrosScreen />)}
 
       <TouchableOpacity onPress={() => Linking.openURL("tel:193")}>
         <View style={styles.caixaEmergencia}>
@@ -161,21 +170,22 @@ export function HomeScreen(props) {
   );
 }
 
-const createStyles = (theme) => StyleSheet.create({
+const createStyles = (theme) =>
+  StyleSheet.create({
     logoENot: {
       flexDirection: "row",
       // alignItems: "center",
       gap: 50,
     },
-      IconNot: {
+    IconNot: {
       color: theme.color,
     },
-     logoImagem: {
+    logoImagem: {
       width: 220,
       height: 100,
       justifyContent: "flex-start",
     },
-     subtitulo: {
+    subtitulo: {
       textAlign: "center",
       fontSize: 16,
       color: theme.color,
@@ -201,7 +211,8 @@ const createStyles = (theme) => StyleSheet.create({
       fontSize: 18,
       fontWeight: "bold",
       color: theme.color,
-    },textoDescritivo: {
+    },
+    textoDescritivo: {
       fontSize: 15,
       color: theme.color,
       marginBottom: 25,
@@ -232,7 +243,7 @@ const createStyles = (theme) => StyleSheet.create({
       marginBottom: 1,
       color: theme.color,
     },
-     botaoAtivar: {
+    botaoAtivar: {
       backgroundColor: theme.backgroundColorWifi,
       paddingVertical: 5,
       paddingHorizontal: 15,
@@ -250,7 +261,7 @@ const createStyles = (theme) => StyleSheet.create({
       padding: 2,
       alignSelf: "center",
     },
-     botaoIndividual: {
+    botaoIndividual: {
       flex: 1,
       alignItems: "center",
       paddingVertical: 10,
@@ -277,4 +288,28 @@ const createStyles = (theme) => StyleSheet.create({
       fontSize: 14,
       color: theme.color,
     },
-})
+    caixaEmergencia: {
+      backgroundColor: theme.emergencia,
+      padding: 18,
+      borderRadius: 15,
+      marginTop: 30,
+      borderWidth: 1,
+      borderColor: theme.colorVidas,
+    },
+    estCardEmergencia: {
+      flexDirection: "row",
+      gap: 10,
+    },
+    textIcon: {
+      alignItems: "center",
+      padding: 10,
+    },
+    textEmergencia: {
+      fontWeight: "bold",
+      fontSize: 16,
+      color: theme.color,
+    },
+    textExpEmergencia: {
+      color: theme.color,
+    },
+  });
