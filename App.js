@@ -16,8 +16,6 @@ import { EuSouScreen } from "./components/EuSouScreen";
 import { EntrarScreen } from "./components/EntrarScreen";
 import { CadastrarScreen } from "./components/CadastrarScreen";
 import { PerfilScreen } from "./components/PerfilScreen";
-import { HistoricoScreen } from "./components/HistoricoScreen";
-import { SocorrosScreen } from "./components/SocorrosScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { NotificacaoScreen } from "./components/NotificacaoScreen";
 import { Alerta } from "./components/Alerta";
@@ -26,7 +24,7 @@ export default function App() {
   const colorScheme = useColorScheme();
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [alertaVisivel, setAlertaVisivel] = useState(false);
-  const [telaAtiva, setTelaAtiva] = useState("home");
+  const [telaAtiva, setTelaAtiva] = useState("entrar");
   const styles = createStyles(useTheme());
   const handleLigar = () => {
     Linking.openURL(`tel:193`);
@@ -95,7 +93,10 @@ export default function App() {
 
 
       {telaAtiva === "notificacao" && (
-       <NotificacaoScreen/>
+       <NotificacaoScreen
+       setTelaAtiva={setTelaAtiva}
+       home={"home"}
+       />
       )}
 
       {alertaVisivel && (
