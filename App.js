@@ -28,9 +28,9 @@ import { PerfilScreen } from "./components/PerfilScreen";
 import { HistoricoScreen } from "./components/HistoricoScreen";
 import { SocorrosScreen } from "./components/SocorrosScreen";
 import { HomeScreen } from "./components/HomeScreen";
+import { NotificacaoScreen } from "./components/NotificacaoScreen";
 
 export default function App() {
-  const [wifiAtivado, setWifiAtivado] = useState(false);
   const colorScheme = useColorScheme();
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [ativo, setAtivo] = useState("historico");
@@ -100,6 +100,7 @@ export default function App() {
           cadastrar={"cadastrar"}
         />
       )}
+
       {telaAtiva === "cadastrar" && (
         <CadastrarScreen
           logoSource={logoSource}
@@ -110,66 +111,27 @@ export default function App() {
 
       {telaAtiva === "home" && (
         <HomeScreen
-
-          {ativo === "historico" && (
-          <HistoricoScreen/>
-          )}
-
-          {ativo === "socorros" && (
-            <SocorrosScreen/>
-          )}
-
+          setAtivo={setAtivo}
+          historico={"historico"}
+          socorros={"socorros"}
+          setTelaAtiva={setTelaAtiva}
+          perfil={"perfil"}
+          notificacao={"notificacao"}
+          logoSource={logoSource}
+          setAlertaVisivel={setAlertaVisivel}
           />
-      )}
+        )}
+
+        {ativo === "historico" && (
+        <HistoricoScreen/>
+        )}
+
+        {ativo === "socorros" && (
+          <SocorrosScreen/>
+        )}
 
       {telaAtiva === "notificacao" && (
-        <View>
-          <View style={styles.caixabege}>
-            <View style={styles.estNot}>
-              <TouchableOpacity
-                onPress={() => setTelaAtiva("home")}
-                style={styles.btnVoltar}
-              >
-                <Ionicons
-                  style={styles.IconNot}
-                  name="arrow-back-circle-outline"
-                  size={30}
-                ></Ionicons>
-              </TouchableOpacity>
-              <Text style={styles.tituloNotificacao}>Notificações</Text>
-            </View>
-
-            <View style={styles.cbmNot}>
-              <View style={styles.tituloebotaoNot}>
-                <Text style={styles.textocbmNot}>Incendio Residencial</Text>
-                <View style={styles.botaoconcluidoNotCon}>
-                  <Text style={styles.textobotaoconcluidoNot}>Concluído</Text>
-                </View>
-              </View>
-              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
-              <View style={styles.diaedataNot}>
-                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
-                <Text style={styles.colorRuaDiaData}>14:30</Text>
-                <Text style={styles.distanciaNot}>50.000 km</Text>
-              </View>
-            </View>
-
-            <View style={styles.cbmNot}>
-              <View style={styles.tituloebotaoNot}>
-                <Text style={styles.textocbmNot}>Incendio Residencial</Text>
-                <View style={styles.botaoconcluidoNotEmAnd}>
-                  <Text style={styles.textobotaoconcluidoNot}>Acontecendo</Text>
-                </View>
-              </View>
-              <Text style={styles.colorRuaDiaData}>Rua das Flores</Text>
-              <View style={styles.diaedataNot}>
-                <Text style={styles.colorRuaDiaData}>15/02/2025</Text>
-                <Text style={styles.colorRuaDiaData}>14:30</Text>
-                <Text style={styles.distanciaNotPerto}> 10 km</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+       <NotificacaoScreen/>
       )}
 
       {alertaVisivel && (

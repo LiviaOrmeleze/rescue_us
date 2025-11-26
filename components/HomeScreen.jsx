@@ -4,6 +4,7 @@ import {
   Image,
   RefreshControl,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -38,9 +39,9 @@ export function HomeScreen(props) {
       }
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.topoCabecalho}>
+      <View >
         <View style={styles.logoENot}>
-          <TouchableOpacity onPress={() => setTelaAtiva("perfil")}>
+          <TouchableOpacity onPress={() => props.setTelaAtiva(props.perfil)}>
             <Ionicons
               style={styles.IconNot}
               name="person-circle-sharp"
@@ -48,11 +49,11 @@ export function HomeScreen(props) {
             ></Ionicons>
           </TouchableOpacity>
           <Image
-            source={logoSource}
+            source={props.logoSource}
             style={styles.logoImagem}
             resizeMode="contain"
           />
-          <TouchableOpacity onPress={() => setTelaAtiva("notificacao")}>
+          <TouchableOpacity onPress={() => props.setTelaAtiva(props.notificacao)}>
             <Ionicons
               style={styles.IconNot}
               name="notifications-outline"
@@ -101,7 +102,7 @@ export function HomeScreen(props) {
             ativo === "historico" && styles.botaoAtivo,
           ]}
           onPress={() => {
-            setAtivo("historico");
+            props.setAtivo(props.historico);
             setAlertaVisivel(false);
           }}
         >
@@ -120,9 +121,9 @@ export function HomeScreen(props) {
             ativo === "socorros" && styles.botaoAtivo,
           ]}
           onPress={() => {
-            setAtivo("socorros");
+            props.setAtivo(props.socorros);
             // setMostrarPrimeirosSOS(!mostrarPrimeirosSOS);
-            setAlertaVisivel(true);
+            props.setAlertaVisivel(true);
           }}
         >
           <Text
@@ -159,3 +160,121 @@ export function HomeScreen(props) {
     </ScrollView>
   );
 }
+
+const createStyles = (theme) => StyleSheet.create({
+    logoENot: {
+      flexDirection: "row",
+      // alignItems: "center",
+      gap: 50,
+    },
+      IconNot: {
+      color: theme.color,
+    },
+     logoImagem: {
+      width: 220,
+      height: 100,
+      justifyContent: "flex-start",
+    },
+     subtitulo: {
+      textAlign: "center",
+      fontSize: 16,
+      color: theme.color,
+    },
+    cartaoPrincipal: {
+      backgroundColor: theme.cartaoPrincipal,
+      borderWidth: 1,
+      borderColor: theme.borderColorCP,
+      borderRadius: 12,
+      padding: 15,
+      marginTop: 20,
+      shadowColor: theme.shadowColorCP,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+    },
+    linhaTitulo: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 5,
+    },
+    tituloCartao: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.color,
+    },textoDescritivo: {
+      fontSize: 15,
+      color: theme.color,
+      marginBottom: 25,
+    },
+    areaStatusBotao: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    linhaStatus: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    textoStatus: {
+      fontSize: 14,
+      color: theme.color,
+      fontWeight: "bold",
+      marginRight: 5,
+    },
+    textoStatusDestaque: {
+      fontSize: 14,
+      fontWeight: "bold",
+      backgroundColor: theme.backgroundColorStatus,
+      borderRadius: 6,
+      padding: 2,
+      paddingHorizontal: 10,
+      fontSize: 14,
+      marginBottom: 1,
+      color: theme.color,
+    },
+     botaoAtivar: {
+      backgroundColor: theme.backgroundColorWifi,
+      paddingVertical: 5,
+      paddingHorizontal: 15,
+      borderRadius: 5,
+    },
+    textoBotaoWiFi: {
+      color: theme.colorBtnWifi,
+    },
+    containerBotoes: {
+      flexDirection: "row",
+      backgroundColor: theme.Btns,
+      borderRadius: 17,
+      justifyContent: "space-between",
+      marginTop: 20,
+      padding: 2,
+      alignSelf: "center",
+    },
+     botaoIndividual: {
+      flex: 1,
+      alignItems: "center",
+      paddingVertical: 10,
+      paddingHorizontal: 9,
+      borderRadius: 15,
+    },
+    botaoAtivo: {
+      flex: 1,
+      backgroundColor: theme.BtnAtivo,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 3,
+      elevation: 3,
+      paddingVertical: 10,
+      paddingHorizontal: 9,
+    },
+    textoAtivo: {
+      fontWeight: "bold",
+      fontSize: 14,
+      color: theme.color,
+    },
+    textoInativo: {
+      fontSize: 14,
+      color: theme.color,
+    },
+})
