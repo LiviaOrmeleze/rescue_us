@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 // URL base da sua API
-const BASE_URL = 'http://rescueus.somee.com/api';
+const BASE_URL = "http://www.rescueus.somee.com/api";
 
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
@@ -38,48 +40,29 @@ const getPerfisSimples = async () => {
   }
 };
 
+const getCadastrar = async (email, senha) => {
+    try {
+      const resposta = await axios.post("http://www.rescueus.somee.com/Users/register", {
+        email: email,
+        senha: senha,
+      });
 
-const getHistoricos = async () => {
-  try {
-    const response = await api.get('/historicos');
-    
-    const listaCompleta = response.data;
-    
-    const listaSimples = listaCompleta.map(historico => ({
-      status: historico.status,
-      dataFim: historico.dataFim,
-    }));
-    
-    return listaSimples;
-    
-  } catch (error) {
+      // pega os dados da resposta
+      const dados = resposta.data;
 
-    throw error;
-  }
-};
+      // salva no AsyncStorage
+      await AsyncStorage.setItem("usuario", JSON.stringify(dados));
 
-const getOperacoes = async () => {
-  try {
-    const response = await api.get('/operacoes');
-
-    const listaCompleta = response.data;
-
-    const listaSimples = listaCompleta.map(operacao => ({
-      operacao: operacao.status,
-    }));
-    
-    return listaSimples;
-    
-  } catch (error) {
-
-    throw error;
-  }
-};
-
+      alert("Cadastro realizado!");
+    } catch (error) {
+      console.log("Erro no cadastro:", error);
+      alert("Erro ao cadastrar.");
+    }
+  };
 
 // Exporta as funções que o componente usará
 const apiService = {
-  getPerfisSimples, getHistorico, getOperacoes,
+  getPerfisSimples, getCadastrar,
   // Você pode adicionar outras funções como getHistorico, postLogin, etc.
 };
 
