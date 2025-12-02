@@ -7,7 +7,6 @@ export function CadastrarScreen(props) {
   const [email, setEmail] = useState([]);
   const [senha, setSenha] = useState([]);
 
-
   return (
     <View>
       <Image
