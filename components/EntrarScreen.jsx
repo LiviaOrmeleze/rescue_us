@@ -69,16 +69,60 @@ export function EntrarScreen(props) {
               return;
             }
 
-            try {
-              const perfil = { email, senha };
-              await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
-            } catch (err) {
-              console.log("Erro ao salvar perfil no Entrar:", err);
-              alert("Erro ao salvar dados localmente.");
-              return;
-            }
+            const userEmail = String(email).trim().toLowerCase();
+            const userSenha = String(senha);
 
-            props.setTelaAtiva("euSou");
+            try {
+              // primeiro tenta o perfil individual
+              const key = `perfil:${userEmail}`;
+              const perJson = await AsyncStorage.getItem(key);
+              if (perJson) {
+                const perObj = JSON.parse(perJson);
+                if (String(perObj.senha) === userSenha) {
+                  // login ok: atualiza referência atual e navega
+                  await AsyncStorage.setItem(
+                    "perfil",
+                    JSON.stringify({ email: userEmail, senha: userSenha })
+                  );
+                  // se o perfil individual já tiver dados (nome/telefone), vai direto para home
+                  const temPerfilPreenchido =
+                    (perObj.nome && String(perObj.nome).trim() !== "") ||
+                    (perObj.telefone && String(perObj.telefone).trim() !== "");
+                  props.setTelaAtiva(temPerfilPreenchido ? "home" : "euSou");
+                  return;
+                } else {
+                  alert("Credenciais inválidas.");
+                  return;
+                }
+              }
+
+              // fallback: checa se existe objeto genérico 'perfil' com mesmas credenciais
+              const generic = await AsyncStorage.getItem("perfil");
+              if (generic) {
+                try {
+                  const gobj = JSON.parse(generic);
+                  if (
+                    String(gobj.email).trim().toLowerCase() === userEmail &&
+                    String(gobj.senha) === userSenha
+                  ) {
+                    // se o objeto genérico contém também dados do perfil, vai para home
+                    const temPerfilPreenchido =
+                      (gobj.nome && String(gobj.nome).trim() !== "") ||
+                      (gobj.telefone && String(gobj.telefone).trim() !== "");
+                    props.setTelaAtiva(temPerfilPreenchido ? "home" : "euSou");
+                    return;
+                  }
+                } catch (e) {
+                  // ignore parse error and continue to not-registered
+                }
+              }
+
+              // se chegou aqui, não há registro
+              alert("Usuário não cadastrado.");
+            } catch (err) {
+              console.log("Erro ao verificar credenciais:", err);
+              alert("Erro ao verificar credenciais.");
+            }
           }}
         >
           <Text style={styles.TextBtnEnteCad}>Entrar</Text>

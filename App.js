@@ -19,6 +19,7 @@ import { PerfilScreen } from "./components/PerfilScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { NotificacaoScreen } from "./components/NotificacaoScreen";
 import { Alerta } from "./components/Alerta";
+import { PerfilBBScreen } from "./components/PerfilBBScreen";
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -38,7 +39,7 @@ export default function App() {
         <EuSouScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
-          entrarBB={"perfilBB"}
+          perfilBB={"perfilBB"}
           entrar={"perfil"}
         />
       )}
@@ -53,7 +54,7 @@ export default function App() {
       )}
 
       {telaAtiva === "perfilBB" && (
-        <PerfilScreen
+        <PerfilBBScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
           home={"home"}

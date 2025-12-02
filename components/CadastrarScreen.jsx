@@ -67,9 +67,44 @@ export function CadastrarScreen(props) {
               return;
             }
 
+            const userEmail = String(email).trim().toLowerCase();
+            const userSenha = String(senha);
+
             try {
-              const perfil = { email, senha };
-              await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+              // checa se já existe perfil por e-mail
+              const key = `perfil:${userEmail}`;
+              const perJson = await AsyncStorage.getItem(key);
+              if (perJson) {
+                alert("Usuário já cadastrado.");
+                return;
+              }
+
+              // checa fallback na chave genérica
+              const generic = await AsyncStorage.getItem("perfil");
+              if (generic) {
+                try {
+                  const gobj = JSON.parse(generic);
+                  if (String(gobj.email).trim().toLowerCase() === userEmail) {
+                    alert("Usuário já cadastrado.");
+                    return;
+                  }
+                } catch (e) {
+                  // ignore parse errors
+                }
+              }
+
+              // salva novo perfil (por e-mail) e atualiza referência genérica
+              const perfil = {
+                nome: "",
+                email: userEmail,
+                telefone: "",
+                senha: userSenha,
+              };
+              await AsyncStorage.setItem(key, JSON.stringify(perfil));
+              await AsyncStorage.setItem(
+                "perfil",
+                JSON.stringify({ email: userEmail, senha: userSenha })
+              );
             } catch (err) {
               console.log("Erro ao salvar perfil no Cadastrar:", err);
               alert("Erro ao salvar dados localmente.");

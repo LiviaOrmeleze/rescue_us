@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   Image,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -10,13 +12,41 @@ import {
 } from "react-native";
 
 import { useTheme } from "../hooks/useTheme";
+import { Picker } from "@react-native-picker/picker";
 
-export function PerfilScreen(props) {
+export function PerfilBBScreen(props) {
   const styles = createStyles(useTheme());
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  // Estado adicionais necessários para o Picker e campos de perfil
+  const [tipoIdentificador, setTipoIdentificador] = useState("");
+  const [identificador, setIdentificador] = useState("");
+   const [refreshing, setRefreshing] = useState(false);
+  
+    const onRefresh = async () => {
+      setRefreshing(true);
+      try {
+        console.log("🔄 Atualizando dados...");
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      } catch (error) {
+        console.error("Erro durante refresh:", error);
+      } finally {
+        setRefreshing(false);
+      }
+    };
 
   return (
+    <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={"#8faaff"}
+              />
+            }
+            showsVerticalScrollIndicator={false}
+          >
     <View>
       <View style={styles.estCabPerfil}>
         <TouchableOpacity
@@ -80,38 +110,36 @@ export function PerfilScreen(props) {
           />
         </View>
         <View style={styles.estDados}>
-            <Text style={styles.Prin}>Identificar Bombeiro</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={tipoIdentificador}
-                onValueChange={(itemValue) => setTipoIdentificador(itemValue)}
-                style={styles.picker} // Aplica estilos internos ao texto do Picker
-              >
-                <Picker.Item label="PM" value="PM" />
-                <Picker.Item label="RE" value="RE" />
-              </Picker>
-            </View>
-
-           
-
-         
-            <TextInput
-              style={styles.Seng}
-              value={identificador}
-              onChangeText={(text) => setIdentificador(text)}
-              placeholderTextColor="#888"
-              placeholder="xxxxxx-x"
-              keyboardType="numeric" // Teclado numérico
-              maxLength={8} // Limita o número de caracteres
-            />
+          <Text style={styles.Prin}>Identificar Bombeiro</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={tipoIdentificador}
+              onValueChange={(itemValue) => setTipoIdentificador(itemValue)}
+              style={styles.picker} // Aplica estilos internos ao texto do Picker
+            >
+              <Picker.Item label="PM" value="PM" />
+              <Picker.Item label="RE" value="RE" />
+            </Picker>
           </View>
+
+          <TextInput
+            style={styles.Seng}
+            value={identificador}
+            onChangeText={(text) => setIdentificador(text)}
+            placeholderTextColor="#888"
+            placeholder="xxxxxx-x"
+            keyboardType="numeric" // Teclado numérico
+            maxLength={8} // Limita o número de caracteres
+          />
+        </View>
       </View>
-     <View style={styles.btn}>
-             <TouchableOpacity style={styles.btnEnteCad}>
-               <Text style={styles.TextBtnEnteCad}>Salvar</Text>
-             </TouchableOpacity>
-           </View>
+      <View style={styles.btn}>
+        <TouchableOpacity style={styles.btnEnteCad}>
+          <Text style={styles.TextBtnEnteCad}>Salvar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
+    </ScrollView>
   );
 }
 
@@ -168,18 +196,22 @@ const createStyles = (theme) =>
       color: theme.color,
     },
     btn: {
-        marginTop: 30,
-      },
-      TextBtnEnteCad: {
-        fontSize: 20,
-        textAlign: "center",
-        color: theme.color,
-      },
-      btnEnteCad: {
-        borderRadius: 16,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: theme.color,
-        backgroundColor: theme.alert,
-      }
+      marginTop: 30,
+      marginBottom: 30,
+    },
+    TextBtnEnteCad: {
+      fontSize: 20,
+      textAlign: "center",
+      color: theme.color,
+    },
+    btnEnteCad: {
+      borderRadius: 16,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme.color,
+      backgroundColor: theme.alert,
+    },
+    picker: {
+      color: theme.color,
+    },
   });

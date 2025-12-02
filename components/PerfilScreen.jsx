@@ -25,10 +25,29 @@ export function PerfilScreen(props) {
         const json = await AsyncStorage.getItem("perfil");
         if (json) {
           const obj = JSON.parse(json);
-          setNome(obj.nome || "");
-          setEmail(obj.email || "");
-          setTelefone(obj.telefone || "");
-          setSenha(obj.senha || "");
+
+          // Caso `perfil` seja um objeto de perfil (legacy), usa diretamente
+          if (obj.nome || obj.telefone) {
+            setNome(obj.nome || "");
+            setEmail(obj.email || "");
+            setTelefone(obj.telefone || "");
+            setSenha(obj.senha || "");
+          } else if (obj.email) {
+            // `perfil` contém credenciais (salvas por Entrar/Cadastrar)
+            const userEmail = String(obj.email).trim().toLowerCase();
+            setEmail(userEmail);
+            setSenha(obj.senha || "");
+
+            // tenta carregar perfil individual por e-mail
+            const key = `perfil:${userEmail}`;
+            const perJson = await AsyncStorage.getItem(key);
+            if (perJson) {
+              const perObj = JSON.parse(perJson);
+              setNome(perObj.nome || "");
+              setTelefone(perObj.telefone || "");
+              setSenha(perObj.senha || obj.senha || "");
+            }
+          }
         }
       } catch (err) {
         console.log("Erro ao carregar perfil:", err);
@@ -37,11 +56,29 @@ export function PerfilScreen(props) {
     loadPerfil();
   }, []);
 
-  // Salva perfil no AsyncStorage
+  // Salva perfil no AsyncStorage por e-mail (perfil:<email>)
   const salvarPerfil = async () => {
     try {
-      const perfil = { nome, email, telefone, senha };
-      await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+      const userEmail = String(email || "")
+        .trim()
+        .toLowerCase();
+      if (!userEmail) {
+        alert("Digite um e-mail para salvar o perfil.");
+        return;
+      }
+
+      const perfil = { nome, email: userEmail, telefone, senha };
+
+      // salva individualmente por e-mail
+      const key = `perfil:${userEmail}`;
+      await AsyncStorage.setItem(key, JSON.stringify(perfil));
+
+      // mantém também a referência atual (credenciais) para compatibilidade
+      await AsyncStorage.setItem(
+        "perfil",
+        JSON.stringify({ email: userEmail, senha })
+      );
+
       alert("Dados salvos com sucesso.");
     } catch (err) {
       console.log("Erro ao salvar perfil:", err);
@@ -117,11 +154,11 @@ export function PerfilScreen(props) {
           />
         </View>
       </View>
-     <View style={styles.btn}>
-             <TouchableOpacity style={styles.btnEnteCad} onPress={salvarPerfil}>
-               <Text style={styles.TextBtnEnteCad}>Salvar</Text>
-             </TouchableOpacity>
-           </View>
+      <View style={styles.btn}>
+        <TouchableOpacity style={styles.btnEnteCad} onPress={salvarPerfil}>
+          <Text style={styles.TextBtnEnteCad}>Salvar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -179,18 +216,18 @@ const createStyles = (theme) =>
       color: theme.color,
     },
     btn: {
-        marginTop: 30,
-      },
-      TextBtnEnteCad: {
-        fontSize: 20,
-        textAlign: "center",
-        color: theme.color,
-      },
-      btnEnteCad: {
-        borderRadius: 16,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: theme.color,
-        backgroundColor: theme.alert,
-      }
+      marginTop: 30,
+    },
+    TextBtnEnteCad: {
+      fontSize: 20,
+      textAlign: "center",
+      color: theme.color,
+    },
+    btnEnteCad: {
+      borderRadius: 16,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme.color,
+      backgroundColor: theme.alert,
+    },
   });

@@ -295,6 +295,7 @@ const createStyles = (theme) =>
       marginTop: 30,
       borderWidth: 1,
       borderColor: theme.colorVidas,
+      marginBottom: 30,
     },
     estCardEmergencia: {
       flexDirection: "row",
