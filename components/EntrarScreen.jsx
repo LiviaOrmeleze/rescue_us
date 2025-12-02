@@ -59,7 +59,10 @@ export function EntrarScreen(props) {
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}>
+        <TouchableOpacity
+          style={styles.btnEnteCad}
+          onPress={() => props.setTelaAtiva("perfil")}
+        >
           <Text style={styles.TextBtnEnteCad}>Entrar</Text>
         </TouchableOpacity>
       </View>

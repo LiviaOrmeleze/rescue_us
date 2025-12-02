@@ -112,8 +112,8 @@ export default function App() {
                 alert("Cadastro realizado!");
                 setEmail("");
                 setSenha("");
-                // volta para entrar
-                setTelaAtiva("entrar");
+                // vai para perfil
+                setTelaAtiva("perfil");
               } catch (error) {
                 console.log("Erro no cadastro (App.js):", error);
                 const serverMessage =
