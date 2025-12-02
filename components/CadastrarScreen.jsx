@@ -4,8 +4,8 @@ import { useTheme } from "../hooks/useTheme";
 
 export function CadastrarScreen(props) {
   const styles = createStyles(useTheme());
-  const [email, setEmail] = useState([]);
-  const [senha, setSenha] = useState([]);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
   return (
     <View>
@@ -51,8 +51,8 @@ export function CadastrarScreen(props) {
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}  >
-          <Text style={styles.TextBtnEnteCad} >Cadastrar</Text>
+        <TouchableOpacity style={styles.btnEnteCad}>
+          <Text style={styles.TextBtnEnteCad}>Cadastrar</Text>
         </TouchableOpacity>
       </View>
     </View>
