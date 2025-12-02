@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   StyleSheet,
@@ -7,13 +7,47 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 
 export function PerfilScreen(props) {
   const styles = createStyles(useTheme());
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
+
+  // Carrega perfil salvo ao montar
+  useEffect(() => {
+    const loadPerfil = async () => {
+      try {
+        const json = await AsyncStorage.getItem("perfil");
+        if (json) {
+          const obj = JSON.parse(json);
+          setNome(obj.nome || "");
+          setEmail(obj.email || "");
+          setTelefone(obj.telefone || "");
+          setSenha(obj.senha || "");
+        }
+      } catch (err) {
+        console.log("Erro ao carregar perfil:", err);
+      }
+    };
+    loadPerfil();
+  }, []);
+
+  // Salva perfil no AsyncStorage
+  const salvarPerfil = async () => {
+    try {
+      const perfil = { nome, email, telefone, senha };
+      await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+      alert("Dados salvos com sucesso.");
+    } catch (err) {
+      console.log("Erro ao salvar perfil:", err);
+      alert("Erro ao salvar dados.");
+    }
+  };
 
   return (
     <View>
@@ -43,6 +77,8 @@ export function PerfilScreen(props) {
           <Text style={styles.Prin}>Nome</Text>
           <TextInput
             style={styles.Seng}
+            value={nome}
+            onChangeText={(text) => setNome(text)}
             placeholder="Digite seu nome"
             placeholderTextColor="#888"
           />
@@ -62,6 +98,8 @@ export function PerfilScreen(props) {
           <Text style={styles.Prin}>Telefone</Text>
           <TextInput
             style={styles.Seng}
+            value={telefone}
+            onChangeText={(text) => setTelefone(text)}
             placeholder="Digite seu telefone"
             placeholderTextColor="#888"
             keyboardType="numeric"
@@ -80,7 +118,7 @@ export function PerfilScreen(props) {
         </View>
       </View>
      <View style={styles.btn}>
-             <TouchableOpacity style={styles.btnEnteCad}>
+             <TouchableOpacity style={styles.btnEnteCad} onPress={salvarPerfil}>
                <Text style={styles.TextBtnEnteCad}>Salvar</Text>
              </TouchableOpacity>
            </View>

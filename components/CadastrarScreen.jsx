@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../hooks/useTheme";
 
 export function CadastrarScreen(props) {
@@ -44,14 +52,33 @@ export function CadastrarScreen(props) {
           </View>
 
           <View style={styles.Link}>
-            <TouchableOpacity onPress={() =>props.setTelaAtiva(props.entrar)}>
+            <TouchableOpacity onPress={() => props.setTelaAtiva(props.entrar)}>
               <Text style={styles.textLink}>Se já tem conta, entre</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}>
+        <TouchableOpacity
+          style={styles.btnEnteCad}
+          onPress={async () => {
+            if (!email || !senha) {
+              alert("Erro no cadastro: preencha e-mail e senha.");
+              return;
+            }
+
+            try {
+              const perfil = { email, senha };
+              await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+            } catch (err) {
+              console.log("Erro ao salvar perfil no Cadastrar:", err);
+              alert("Erro ao salvar dados localmente.");
+              return;
+            }
+
+            props.setTelaAtiva("euSou");
+          }}
+        >
           <Text style={styles.TextBtnEnteCad}>Cadastrar</Text>
         </TouchableOpacity>
       </View>
@@ -114,9 +141,9 @@ const createStyles = (theme) =>
       fontSize: 20,
       textAlign: "center",
       color: theme.color,
-    }, 
-    textLink:{
+    },
+    textLink: {
       marginTop: 14,
-      color: theme.color
+      color: theme.color,
     },
   });

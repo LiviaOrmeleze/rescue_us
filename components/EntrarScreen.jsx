@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../hooks/useTheme";
 
 export function EntrarScreen(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const styles = createStyles(useTheme());
-  
 
   return (
     <View>
@@ -52,14 +52,35 @@ export function EntrarScreen(props) {
           </View>
 
           <View style={styles.Link}>
-            <TouchableOpacity onPress={() => props.setTelaAtiva(props.cadastrar)}>
+            <TouchableOpacity
+              onPress={() => props.setTelaAtiva(props.cadastrar)}
+            >
               <Text style={styles.textLink}>Se não tem conta, cadastre-se</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}>
+        <TouchableOpacity
+          style={styles.btnEnteCad}
+          onPress={async () => {
+            if (!email || !senha) {
+              alert("Erro no login: preencha e-mail e senha.");
+              return;
+            }
+
+            try {
+              const perfil = { email, senha };
+              await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+            } catch (err) {
+              console.log("Erro ao salvar perfil no Entrar:", err);
+              alert("Erro ao salvar dados localmente.");
+              return;
+            }
+
+            props.setTelaAtiva("euSou");
+          }}
+        >
           <Text style={styles.TextBtnEnteCad}>Entrar</Text>
         </TouchableOpacity>
       </View>
@@ -123,8 +144,8 @@ const createStyles = (theme) =>
       textAlign: "center",
       color: theme.color,
     },
-    textLink:{
+    textLink: {
       marginTop: 14,
-      color: theme.color
-    }, 
+      color: theme.color,
+    },
   });

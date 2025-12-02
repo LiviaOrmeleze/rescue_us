@@ -2,10 +2,6 @@ import {
   StyleSheet,
   useColorScheme,
   Linking,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
 } from "react-native";
 
 // Importe as imagens da logo
@@ -24,15 +20,11 @@ import { HomeScreen } from "./components/HomeScreen";
 import { NotificacaoScreen } from "./components/NotificacaoScreen";
 import { Alerta } from "./components/Alerta";
 
-import apiService from "./service/apiService";
-
 export default function App() {
   const colorScheme = useColorScheme();
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [alertaVisivel, setAlertaVisivel] = useState(false);
   const [telaAtiva, setTelaAtiva] = useState("entrar");
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
   const styles = createStyles(useTheme());
   const handleLigar = () => {
     Linking.openURL(`tel:193`);
@@ -69,6 +61,7 @@ export default function App() {
         />
       )}
 
+
       {telaAtiva === "entrar" && (
         <EntrarScreen
           logoSource={logoSource}
@@ -78,53 +71,11 @@ export default function App() {
       )}
 
       {telaAtiva === "cadastrar" && (
-        <View>
-          <Text style={{ fontSize: 22, marginBottom: 12 }}>Cadastrar</Text>
-
-          <TextInput
-            placeholder="E-mail"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            style={styles.input}
-            placeholderTextColor="#888"
-          />
-
-          <TextInput
-            placeholder="Senha"
-            value={senha}
-            onChangeText={setSenha}
-            secureTextEntry={true}
-            style={styles.input}
-            placeholderTextColor="#888"
-          />
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={async () => {
-              if (!email || !senha) {
-                alert("Por favor preencha e-mail e senha.");
-                return;
-              }
-
-              try {
-                await apiService.getCadastrar(email, senha);
-                alert("Cadastro realizado!");
-                setEmail("");
-                setSenha("");
-                // vai para perfil
-                setTelaAtiva("perfil");
-              } catch (error) {
-                console.log("Erro no cadastro (App.js):", error);
-                const serverMessage =
-                  error.response?.data || error.message || String(error);
-                alert(`Erro ao cadastrar: ${JSON.stringify(serverMessage)}`);
-              }
-            }}
-          >
-            <Text style={styles.buttonText}>Cadastrar</Text>
-          </TouchableOpacity>
-        </View>
+        <CadastrarScreen
+          logoSource={logoSource}
+          setTelaAtiva={setTelaAtiva}
+          entrar={"entrar"}
+        />
       )}
 
       {telaAtiva === "home" && (
@@ -136,15 +87,23 @@ export default function App() {
           notificacao={"notificacao"}
           logoSource={logoSource}
           setAlertaVisivel={setAlertaVisivel}
-        />
-      )}
+          />
+       
+        )}
+
 
       {telaAtiva === "notificacao" && (
-        <NotificacaoScreen setTelaAtiva={setTelaAtiva} home={"home"} />
+       <NotificacaoScreen
+       setTelaAtiva={setTelaAtiva}
+       home={"home"}
+       />
       )}
 
       {alertaVisivel && (
-        <Alerta handleLigar={handleLigar} setAlertaVisivel={setAlertaVisivel} />
+        <Alerta
+        handleLigar={handleLigar}
+        setAlertaVisivel={setAlertaVisivel}
+        />
       )}
     </SafeAreaView>
   );
@@ -158,27 +117,6 @@ const createStyles = (theme) =>
       // alignItems: "center",
       // justifyContent: "center",
       paddingHorizontal: 20,
-    },
-    input: {
-      width: "100%",
-      padding: 10,
-      borderWidth: 1,
-      borderColor: "#ccc",
-      borderRadius: 8,
-      marginBottom: 8,
-    },
-    button: {
-      backgroundColor: "#2f95dc",
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 8,
-      marginBottom: 8,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    buttonText: {
-      color: "white",
-      fontWeight: "bold",
     },
     // logoEntrar: {
     //   width: 220,
@@ -382,6 +320,9 @@ const createStyles = (theme) =>
     //   fontWeight: "bold",
     //   fontSize: 15,
     // },
+    
+
+    
 
     // caixaEmergencia: {
     //   backgroundColor: theme.emergencia,
