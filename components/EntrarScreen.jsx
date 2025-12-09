@@ -31,7 +31,7 @@ export function EntrarScreen(props) {
 
       // Chamada à API de login
       const url =
-        "http://rescueus.somee.com/Users/login?useCookies=false&useSessionCookies=false";
+        "http://rescueus.somee.com/Usuario/login?useCookies=false&useSessionCookies=false";
       const payload = {
         email: userEmail,
         // envia ambos os nomes de campo por segurança

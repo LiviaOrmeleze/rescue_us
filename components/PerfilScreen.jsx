@@ -10,7 +10,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
-// import apiService from "../services/apiService";
 
 export function PerfilScreen(props) {
   const styles = createStyles(useTheme());
@@ -86,23 +85,6 @@ export function PerfilScreen(props) {
       alert("Erro ao salvar dados.");
     }
   };
-
-  
-  // const App = () => {
-  //   const [perfis, setPerfis] = useState([]);
-  
-  //   useEffect(() => {
-  //     const perfil = async () => {
-  //       try {
-  //         const listaSimples = await apiService.getPerfisSimples();
-  //         setPerfis(listaSimples);
-  //       } catch (error) {
-  //         console.error("Erro ao buscar perfis:", error);
-  //       }
-  //     };
-  
-  //     perfil();
-  //   }, []);
 
   return (
     <View>

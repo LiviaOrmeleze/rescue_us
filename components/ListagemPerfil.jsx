@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
-
+import apiService from "../service/apiService";
 
 export function ListagemPerfil(props) {
   const styles = createStyles(useTheme());
+  const [perfis, setPerfis] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Exemplo de dados fictícios
-  const perfis = [
-    { nome: "João Silva", email: "joao.silva@email.com" },
-    { nome: "Maria Oliveira", email: "maria.oliveira@email.com" },
-    { nome: "Carlos Santos", email: "carlos.santos@email.com" },
-    { nome: "Ana Costa", email: "ana.costa@email.com" },
-  ];
+  useEffect(() => {
+    let mounted = true;
+    const carregarPerfis = async () => {
+      try {
+        const lista = await apiService.getPerfisSimples();
+        if (mounted) setPerfis(lista || []);
+      } catch (error) {
+        console.error("Erro ao buscar perfis:", error);
+        alert("Erro ao carregar listagem de perfis.");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    carregarPerfis();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
@@ -33,7 +47,7 @@ export function ListagemPerfil(props) {
             style={styles.IconNot}
             name="arrow-back-circle-outline"
             size={30}
-          ></Ionicons>
+          />
         </TouchableOpacity>
         <Image
           source={props.logoSource}
@@ -41,19 +55,31 @@ export function ListagemPerfil(props) {
           resizeMode="contain"
         />
       </View>
+
       <Text style={styles.titulo}>Listagem de Perfis</Text>
-      <FlatList
-        data={perfis}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.lista}
-      />
+
+      {loading ? (
+        <Text style={{ color: styles.nome.color, textAlign: "center" }}>Carregando...</Text>
+      ) : (
+        <FlatList
+          data={perfis}
+          keyExtractor={(item, index) => item.email || index.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.lista}
+          ListEmptyComponent={<Text style={{ color: styles.nome.color, textAlign: "center" }}>Nenhum perfil encontrado.</Text>}
+        />
+      )}
     </View>
   );
 }
 
 const createStyles = (theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.backgroundColor,
+      paddingHorizontal: 20,
+    },
     estCabPerfil: {
       flexDirection: "row",
       alignItems: "center",
@@ -72,8 +98,8 @@ const createStyles = (theme) =>
       fontSize: 24,
       fontWeight: "bold",
       color: theme.color,
-      marginBottom:20,
-      marginTop:15,
+      marginBottom: 20,
+      marginTop: 15,
       textAlign: "center",
     },
     lista: {
@@ -82,10 +108,10 @@ const createStyles = (theme) =>
     card: {
       backgroundColor: theme.borderColorCaixa,
       marginBottom: 10,
-      padding:10,
+      padding: 10,
       borderRadius: 10,
-      borderWidth:2,
-      borderColor: theme.backgroundColorCbm
+      borderWidth: 2,
+      borderColor: theme.backgroundColorCbm,
     },
     nome: {
       fontSize: 18,

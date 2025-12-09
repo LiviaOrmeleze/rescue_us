@@ -76,7 +76,7 @@ export function CadastrarScreen(props) {
             try {
               setLoading(true);
 
-              const url = "http://rescueus.somee.com/Users/register";
+              const url =  'http://rescueus.somee.com/Usuario/register';
               // envio ambos os campos "senha" e "password" temporariamente
               const payload = {
                 email: userEmail,
