@@ -21,7 +21,7 @@ export function EuSouScreen(props) {
         <View style={styles.campoEuSou}>
           <TouchableOpacity
             style={styles.cardEuSou}
-            onPress={() => props.setTelaAtiva(props.entrarBB)}
+            onPress={() => props.setTelaAtiva(props.perfilBB)}
           >
             <Text style={styles.textEuSou}>Eu sou Bombeiro</Text>
             <Ionicons

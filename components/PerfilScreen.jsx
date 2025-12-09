@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   StyleSheet,
@@ -7,13 +7,102 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
+// import apiService from "../services/apiService";
 
 export function PerfilScreen(props) {
   const styles = createStyles(useTheme());
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
+
+  // Carrega perfil salvo ao montar
+  useEffect(() => {
+    const loadPerfil = async () => {
+      try {
+        const json = await AsyncStorage.getItem("perfil");
+        if (json) {
+          const obj = JSON.parse(json);
+
+          // Caso `perfil` seja um objeto de perfil (legacy), usa diretamente
+          if (obj.nome || obj.telefone) {
+            setNome(obj.nome || "");
+            setEmail(obj.email || "");
+            setTelefone(obj.telefone || "");
+            setSenha(obj.senha || "");
+          } else if (obj.email) {
+            // `perfil` contém credenciais (salvas por Entrar/Cadastrar)
+            const userEmail = String(obj.email).trim().toLowerCase();
+            setEmail(userEmail);
+            setSenha(obj.senha || "");
+
+            // tenta carregar perfil individual por e-mail
+            const key = `perfil:${userEmail}`;
+            const perJson = await AsyncStorage.getItem(key);
+            if (perJson) {
+              const perObj = JSON.parse(perJson);
+              setNome(perObj.nome || "");
+              setTelefone(perObj.telefone || "");
+              setSenha(perObj.senha || obj.senha || "");
+            }
+          }
+        }
+      } catch (err) {
+        console.log("Erro ao carregar perfil:", err);
+      }
+    };
+    loadPerfil();
+  }, []);
+
+  // Salva perfil no AsyncStorage por e-mail (perfil:<email>)
+  const salvarPerfil = async () => {
+    try {
+      const userEmail = String(email || "")
+        .trim()
+        .toLowerCase();
+      if (!userEmail) {
+        alert("Digite um e-mail para salvar o perfil.");
+        return;
+      }
+
+      const perfil = { nome, email: userEmail, telefone, senha };
+
+      // salva individualmente por e-mail
+      const key = `perfil:${userEmail}`;
+      await AsyncStorage.setItem(key, JSON.stringify(perfil));
+
+      // mantém também a referência atual (credenciais) para compatibilidade
+      await AsyncStorage.setItem(
+        "perfil",
+        JSON.stringify({ email: userEmail, senha })
+      );
+
+      alert("Dados salvos com sucesso.");
+    } catch (err) {
+      console.log("Erro ao salvar perfil:", err);
+      alert("Erro ao salvar dados.");
+    }
+  };
+
+  
+  // const App = () => {
+  //   const [perfis, setPerfis] = useState([]);
+  
+  //   useEffect(() => {
+  //     const perfil = async () => {
+  //       try {
+  //         const listaSimples = await apiService.getPerfisSimples();
+  //         setPerfis(listaSimples);
+  //       } catch (error) {
+  //         console.error("Erro ao buscar perfis:", error);
+  //       }
+  //     };
+  
+  //     perfil();
+  //   }, []);
 
   return (
     <View>
@@ -43,6 +132,8 @@ export function PerfilScreen(props) {
           <Text style={styles.Prin}>Nome</Text>
           <TextInput
             style={styles.Seng}
+            value={nome}
+            onChangeText={(text) => setNome(text)}
             placeholder="Digite seu nome"
             placeholderTextColor="#888"
           />
@@ -62,6 +153,8 @@ export function PerfilScreen(props) {
           <Text style={styles.Prin}>Telefone</Text>
           <TextInput
             style={styles.Seng}
+            value={telefone}
+            onChangeText={(text) => setTelefone(text)}
             placeholder="Digite seu telefone"
             placeholderTextColor="#888"
             keyboardType="numeric"
@@ -79,11 +172,11 @@ export function PerfilScreen(props) {
           />
         </View>
       </View>
-     <View style={styles.btn}>
-             <TouchableOpacity style={styles.btnEnteCad}>
-               <Text style={styles.TextBtnEnteCad}>Salvar</Text>
-             </TouchableOpacity>
-           </View>
+      <View style={styles.btn}>
+        <TouchableOpacity style={styles.btnEnteCad} onPress={() => props.setTelaAtiva(props.home)}>
+          <Text style={styles.TextBtnEnteCad}>Salvar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -141,18 +234,18 @@ const createStyles = (theme) =>
       color: theme.color,
     },
     btn: {
-        marginTop: 30,
-      },
-      TextBtnEnteCad: {
-        fontSize: 20,
-        textAlign: "center",
-        color: theme.color,
-      },
-      btnEnteCad: {
-        borderRadius: 16,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: theme.color,
-        backgroundColor: theme.alert,
-      }
+      marginTop: 30,
+    },
+    TextBtnEnteCad: {
+      fontSize: 20,
+      textAlign: "center",
+      color: theme.color,
+    },
+    btnEnteCad: {
+      borderRadius: 16,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme.color,
+      backgroundColor: theme.alert,
+    },
   });

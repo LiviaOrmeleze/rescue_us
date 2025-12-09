@@ -7,13 +7,99 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../hooks/useTheme";
+import axios from "axios";
 
 export function EntrarScreen(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
   const styles = createStyles(useTheme());
-  
+
+  const handleLogin = async () => {
+    if (!email || !senha) {
+      alert("Erro no login: preencha e-mail e senha.");
+      return;
+    }
+
+    const userEmail = String(email).trim().toLowerCase();
+    const userSenha = String(senha);
+
+    try {
+      setLoading(true);
+
+      // Chamada à API de login
+      const url =
+        "http://rescueus.somee.com/Users/login?useCookies=false&useSessionCookies=false";
+      const payload = {
+        email: userEmail,
+        // envia ambos os nomes de campo por segurança
+        senha: userSenha,
+        password: userSenha,
+      };
+
+      const response = await axios.post(url, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log("Login response:", response.status, response.data);
+
+      // considera sucesso quando 200
+      if (response?.status === 200 || response?.status === 201) {
+        // opcional: salvar token se retornado
+        if (response.data?.token) {
+          await AsyncStorage.setItem("token", response.data.token);
+        }
+
+        // atualiza referência genérica de credenciais locais
+        await AsyncStorage.setItem(
+          "perfil",
+          JSON.stringify({ email: userEmail, senha: userSenha })
+        );
+
+        // verifica perfil individual local para decidir navegação
+        const key = `perfil:${userEmail}`;
+        const perJson = await AsyncStorage.getItem(key);
+        if (perJson) {
+          const perObj = JSON.parse(perJson);
+          const temPerfilPreenchido =
+            (perObj.nome && String(perObj.nome).trim() !== "") ||
+            (perObj.telefone && String(perObj.telefone).trim() !== "");
+          props.setTelaAtiva(temPerfilPreenchido ? "home" : "euSou");
+          return;
+        }
+
+        // se não houver perfil individual, vai para euSou
+        props.setTelaAtiva("euSou");
+        return;
+      }
+
+      // resposta inesperada
+      const msg =
+        response?.data?.message ||
+        JSON.stringify(response?.data) ||
+        `Erro no login (status ${response?.status}).`;
+      alert(msg);
+    } catch (err) {
+      console.log("Erro ao efetuar login (API):", err);
+      console.log("err.response?.status:", err?.response?.status);
+      console.log("err.response?.data:", err?.response?.data);
+
+      // Mensagem mais informativa para o usuário
+      if (err?.response?.status === 401 || err?.response?.status === 400) {
+        alert("Credenciais inválidas.");
+      } else if (err?.response?.data) {
+        const serverMsg =
+          err.response.data.message || JSON.stringify(err.response.data);
+        alert(`Erro ao logar: ${serverMsg}`);
+      } else {
+        alert(`Erro ao logar: ${err.message || "erro desconhecido"}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View>
@@ -36,6 +122,7 @@ export function EntrarScreen(props) {
               placeholder="Digite seu e-mail"
               placeholderTextColor="#888"
               keyboardType="email-address"
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.estDados}>
@@ -59,8 +146,14 @@ export function EntrarScreen(props) {
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}>
-          <Text style={styles.TextBtnEnteCad}>Entrar</Text>
+        <TouchableOpacity
+          style={styles.btnEnteCad}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          <Text style={styles.TextBtnEnteCad}>
+            {loading ? "Entrando..." : "Entrar"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -123,8 +216,8 @@ const createStyles = (theme) =>
       textAlign: "center",
       color: theme.color,
     },
-    textLink:{
+    textLink: {
       marginTop: 14,
-      color: theme.color
-    }, 
+      color: theme.color,
+    },
   });

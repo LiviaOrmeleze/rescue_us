@@ -16,6 +16,8 @@ import { HomeScreen } from "./components/HomeScreen";
 import { NotificacaoScreen } from "./components/NotificacaoScreen";
 import { Alerta } from "./components/Alerta";
 import { ListagemPerfil } from "./components/ListagemPerfil";
+import { PerfilBBScreen } from "./components/PerfilBBScreen";
+import { HomeBB } from "./components/HomeBB";
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -35,7 +37,7 @@ export default function App() {
         <EuSouScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
-          entrarBB={"perfilBB"}
+          perfilBB={"perfilBB"}
           entrar={"perfil"}
         />
       )}
@@ -50,10 +52,10 @@ export default function App() {
       )}
 
       {telaAtiva === "perfilBB" && (
-        <PerfilScreen
+        <PerfilBBScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
-          home={"home"}
+          homeBB={"homeBB"} 
           Bombeiro={bombeiro}
         />
       )}
@@ -96,10 +98,23 @@ export default function App() {
           home={"home"}
           logoSource={logoSource}
         />
+       <NotificacaoScreen
+       setTelaAtiva={setTelaAtiva}
+       home={"home"}
+       />
+      )}
+
+      {telaAtiva === "homeBB" && (
+        <HomeBB
+          setTelaAtiva={setTelaAtiva}
+          perfilBB={"perfilBB"}
+          logoSource={logoSource}
+        />
       )}
       {alertaVisivel && (
         <Alerta handleLigar={handleLigar} setAlertaVisivel={setAlertaVisivel} />
       )}
+      
     </SafeAreaView>
   );
 }
@@ -109,8 +124,6 @@ const createStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.backgroundColor,
-      // alignItems: "center",
-      // justifyContent: "center",
       paddingHorizontal: 20,
     },
     // logoEntrar: {
@@ -535,4 +548,6 @@ const createStyles = (theme) =>
     // textLink: {
     //   color: theme.color,
     // },
+  });
+
   });
