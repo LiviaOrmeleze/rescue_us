@@ -1,8 +1,4 @@
-import {
-  StyleSheet,
-  useColorScheme,
-  Linking,
-} from "react-native";
+import { StyleSheet, useColorScheme, Linking } from "react-native";
 
 // Importe as imagens da logo
 import LogoDark from "./assets/LogoDark.png";
@@ -19,12 +15,13 @@ import { PerfilScreen } from "./components/PerfilScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { NotificacaoScreen } from "./components/NotificacaoScreen";
 import { Alerta } from "./components/Alerta";
+import { ListagemPerfil } from "./components/ListagemPerfil";
 
 export default function App() {
   const colorScheme = useColorScheme();
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [alertaVisivel, setAlertaVisivel] = useState(false);
-  const [telaAtiva, setTelaAtiva] = useState("entrar");
+  const [telaAtiva, setTelaAtiva] = useState("home");
   const styles = createStyles(useTheme());
   const handleLigar = () => {
     Linking.openURL(`tel:193`);
@@ -61,7 +58,6 @@ export default function App() {
         />
       )}
 
-
       {telaAtiva === "entrar" && (
         <EntrarScreen
           logoSource={logoSource}
@@ -87,23 +83,22 @@ export default function App() {
           notificacao={"notificacao"}
           logoSource={logoSource}
           setAlertaVisivel={setAlertaVisivel}
-          />
-       
-        )}
-
-
-      {telaAtiva === "notificacao" && (
-       <NotificacaoScreen
-       setTelaAtiva={setTelaAtiva}
-       home={"home"}
-       />
+        />
       )}
 
-      {alertaVisivel && (
-        <Alerta
-        handleLigar={handleLigar}
-        setAlertaVisivel={setAlertaVisivel}
+      {telaAtiva === "notificacao" && (
+        <NotificacaoScreen setTelaAtiva={setTelaAtiva} home={"home"} />
+      )}
+
+      {telaAtiva === "listagem" && (
+        <ListagemPerfil
+          setTelaAtiva={setTelaAtiva}
+          home={"home"}
+          logoSource={logoSource}
         />
+      )}
+      {alertaVisivel && (
+        <Alerta handleLigar={handleLigar} setAlertaVisivel={setAlertaVisivel} />
       )}
     </SafeAreaView>
   );
@@ -320,9 +315,6 @@ const createStyles = (theme) =>
     //   fontWeight: "bold",
     //   fontSize: 15,
     // },
-    
-
-    
 
     // caixaEmergencia: {
     //   backgroundColor: theme.emergencia,

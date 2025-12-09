@@ -169,7 +169,6 @@ export function HomeScreen(props) {
     </ScrollView>
   );
 }
-
 const createStyles = (theme) =>
   StyleSheet.create({
     logoENot: {
