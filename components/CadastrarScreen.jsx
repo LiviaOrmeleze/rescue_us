@@ -9,11 +9,13 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../hooks/useTheme";
+import axios from "axios";
 
 export function CadastrarScreen(props) {
   const styles = createStyles(useTheme());
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <View>
@@ -36,6 +38,7 @@ export function CadastrarScreen(props) {
               placeholder="Digite seu e-mail"
               placeholderTextColor="#888"
               keyboardType="email-address"
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.estDados}>
@@ -71,50 +74,61 @@ export function CadastrarScreen(props) {
             const userSenha = String(senha);
 
             try {
-              // checa se já existe perfil por e-mail
-              const key = `perfil:${userEmail}`;
-              const perJson = await AsyncStorage.getItem(key);
-              if (perJson) {
-                alert("Usuário já cadastrado.");
+              setLoading(true);
+
+              const url = "http://rescueus.somee.com/Users/register";
+              // envio ambos os campos "senha" e "password" temporariamente
+              const payload = {
+                email: userEmail,
+                senha: userSenha,
+                password: userSenha,
+              };
+
+              const response = await axios.post(url, payload, {
+                headers: { "Content-Type": "application/json" },
+              });
+
+              console.log("Register response:", response.status, response.data);
+
+              if (response?.status === 200 || response?.status === 201) {
+                const key = `perfil:${userEmail}`;
+                const perfil = { email: userEmail, senha: userSenha };
+                await AsyncStorage.setItem(key, JSON.stringify(perfil));
+                await AsyncStorage.setItem(
+                  "perfil",
+                  JSON.stringify({ email: userEmail, senha: userSenha })
+                );
+
+                alert("Cadastro realizado com sucesso!");
+                props.setTelaAtiva("euSou");
                 return;
               }
 
-              // checa fallback na chave genérica
-              const generic = await AsyncStorage.getItem("perfil");
-              if (generic) {
-                try {
-                  const gobj = JSON.parse(generic);
-                  if (String(gobj.email).trim().toLowerCase() === userEmail) {
-                    alert("Usuário já cadastrado.");
-                    return;
-                  }
-                } catch (e) {
-                  // ignore parse errors
-                }
-              }
-
-              // salva novo perfil (por e-mail) e atualiza referência genérica
-              const perfil = {
-                nome: "",
-                email: userEmail,
-                telefone: "",
-                senha: userSenha,
-              };
-              await AsyncStorage.setItem(key, JSON.stringify(perfil));
-              await AsyncStorage.setItem(
-                "perfil",
-                JSON.stringify({ email: userEmail, senha: userSenha })
-              );
+              const msg =
+                response?.data?.message ||
+                JSON.stringify(response?.data) ||
+                `Erro no cadastro (status ${response?.status}).`;
+              alert(msg);
             } catch (err) {
-              console.log("Erro ao salvar perfil no Cadastrar:", err);
-              alert("Erro ao salvar dados localmente.");
-              return;
+              // logs detalhados para debug
+              console.log("Erro ao cadastrar (API):", err);
+              console.log("err.response?.status:", err?.response?.status);
+              console.log("err.response?.data:", err?.response?.data);
+              const serverData = err?.response?.data;
+              const serverMsg =
+                (serverData && (serverData.message || JSON.stringify(serverData))) ||
+                err.message ||
+                "Erro ao cadastrar.";
+              alert(`Erro ao cadastrar`);
+            } finally {
+              setLoading(false);
             }
-
-            props.setTelaAtiva("euSou");
           }}
+          disabled={loading}
         >
-          <Text style={styles.TextBtnEnteCad}>Cadastrar</Text>
+          <Text style={styles.TextBtnEnteCad}>
+            {loading ? "Registrando..." : "Cadastrar"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

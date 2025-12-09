@@ -50,7 +50,7 @@ export function PerfilBBScreen(props) {
     <View>
       <View style={styles.estCabPerfil}>
         <TouchableOpacity
-          onPress={() => props.setTelaAtiva(props.home)}
+          onPress={() => props.setTelaAtiva(props.homeBB)}
           style={styles.btnVoltar}
         >
           <Ionicons
@@ -117,8 +117,8 @@ export function PerfilBBScreen(props) {
               onValueChange={(itemValue) => setTipoIdentificador(itemValue)}
               style={styles.picker} // Aplica estilos internos ao texto do Picker
             >
-              <Picker.Item label="PM" value="PM" />
-              <Picker.Item label="RE" value="RE" />
+              <Picker.Item  style={styles.picker} label="PM" value="PM" />
+              <Picker.Item style={styles.picker} label="RE" value="RE" />
             </Picker>
           </View>
 
@@ -134,7 +134,7 @@ export function PerfilBBScreen(props) {
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad}>
+        <TouchableOpacity style={styles.btnEnteCad} onPress={() => props.setTelaAtiva(props.homeBB)}>
           <Text style={styles.TextBtnEnteCad}>Salvar</Text>
         </TouchableOpacity>
       </View>

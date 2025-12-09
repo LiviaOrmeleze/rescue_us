@@ -10,6 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
+// import apiService from "../services/apiService";
 
 export function PerfilScreen(props) {
   const styles = createStyles(useTheme());
@@ -86,6 +87,23 @@ export function PerfilScreen(props) {
     }
   };
 
+  
+  // const App = () => {
+  //   const [perfis, setPerfis] = useState([]);
+  
+  //   useEffect(() => {
+  //     const perfil = async () => {
+  //       try {
+  //         const listaSimples = await apiService.getPerfisSimples();
+  //         setPerfis(listaSimples);
+  //       } catch (error) {
+  //         console.error("Erro ao buscar perfis:", error);
+  //       }
+  //     };
+  
+  //     perfil();
+  //   }, []);
+
   return (
     <View>
       <View style={styles.estCabPerfil}>
@@ -155,7 +173,7 @@ export function PerfilScreen(props) {
         </View>
       </View>
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad} onPress={salvarPerfil}>
+        <TouchableOpacity style={styles.btnEnteCad} onPress={() => props.setTelaAtiva(props.home)}>
           <Text style={styles.TextBtnEnteCad}>Salvar</Text>
         </TouchableOpacity>
       </View>
