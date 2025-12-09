@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, RefreshControl } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
 import apiService from "../service/apiService";
@@ -8,26 +8,31 @@ export function ListagemPerfil(props) {
   const styles = createStyles(useTheme());
   const [perfis, setPerfis] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const carregarPerfis = async () => {
+    try {
+      setLoading(true);
+      const lista = await apiService.getPerfisSimples();
+      setPerfis(lista || []);
+    } catch (error) {
+      console.error("Erro ao buscar perfis:", error);
+      alert("Erro ao carregar listagem de perfis.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    let mounted = true;
-    const carregarPerfis = async () => {
-      try {
-        const lista = await apiService.getPerfisSimples();
-        if (mounted) setPerfis(lista || []);
-      } catch (error) {
-        console.error("Erro ao buscar perfis:", error);
-        alert("Erro ao carregar listagem de perfis.");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
     carregarPerfis();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.refreshKey]); // quando props.refreshKey mudar, recarrega a lista
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    carregarPerfis();
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
@@ -58,7 +63,7 @@ export function ListagemPerfil(props) {
 
       <Text style={styles.titulo}>Listagem de Perfis</Text>
 
-      {loading ? (
+      {loading && !refreshing ? (
         <Text style={{ color: styles.nome.color, textAlign: "center" }}>Carregando...</Text>
       ) : (
         <FlatList
@@ -66,6 +71,9 @@ export function ListagemPerfil(props) {
           keyExtractor={(item, index) => item.email || index.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.lista}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={styles.nome.color} />
+          }
           ListEmptyComponent={<Text style={{ color: styles.nome.color, textAlign: "center" }}>Nenhum perfil encontrado.</Text>}
         />
       )}
