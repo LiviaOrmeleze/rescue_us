@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../hooks/useTheme";
@@ -16,6 +17,42 @@ export function CadastrarScreen(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const salvarPerfil = async () => {
+    try {
+      const perfil = {
+        nome,
+        email,
+        telefone,
+        senha,
+        tipoIdentificador,
+        identificador,
+      };
+
+      const response = await fetch("http://rescueus.somee.com/api/Perfis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(perfil),
+      });
+
+      if (response.ok) {
+        // Salva o e-mail e a senha no AsyncStorage
+        await AsyncStorage.setItem("email", email);
+        await AsyncStorage.setItem("senha", senha);
+
+        Alert.alert("Sucesso", "Perfil salvo com sucesso!");
+        console.log("✅ Perfil salvo na API:", perfil);
+      } else {
+        console.error("Erro ao salvar perfil na API:", response.status);
+        Alert.alert("Erro", "Não foi possível salvar o perfil.");
+      }
+    } catch (err) {
+      console.error("Erro ao salvar perfil na API:", err);
+      Alert.alert("Erro", "Erro ao salvar o perfil.");
+    }
+  };
 
   return (
     <View>
@@ -116,7 +153,8 @@ export function CadastrarScreen(props) {
               console.log("err.response?.data:", err?.response?.data);
               const serverData = err?.response?.data;
               const serverMsg =
-                (serverData && (serverData.message || JSON.stringify(serverData))) ||
+                (serverData &&
+                  (serverData.message || JSON.stringify(serverData))) ||
                 err.message ||
                 "Erro ao cadastrar.";
               alert(`Erro ao cadastrar`);

@@ -59,10 +59,26 @@ export function HomeBB(props) {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => props.setTelaAtiva(props.ListagemPerfil)}
+      >
         <Text style={styles.title}>Listagem de Perfil</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => props.setTelaAtiva(props.RedesConhecidas)}
+      >
+        <Text style={styles.title}>Redes conhecidas</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => props.setTelaAtiva(props.HistóricoDeAlerta)}
+      >
+        <Text style={styles.title}>Histórico de alertas</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -92,7 +108,6 @@ const createStyles = (theme) =>
       borderWidth: 1,
       borderRadius: 8,
       marginTop: 30,
-      width: "50%",
     },
     title: {
       fontSize: 19,

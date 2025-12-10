@@ -1,11 +1,38 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../hooks/useTheme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function EuSouScreen(props) {
   const styles = createStyles(useTheme());
-  
+
+  // Função para salvar o tipo de usuário e redirecionar
+  const selecionarTipoUsuario = async (tipoUsuario) => {
+    try {
+      await AsyncStorage.setItem("tipoUsuario", tipoUsuario); // Salva o tipo de usuário no AsyncStorage
+      console.log(`Tipo de usuário salvo: ${tipoUsuario}`);
+
+      if (tipoUsuario === "bombeiro") {
+        props.setTelaAtiva(props.perfilBB); // Redireciona para a tela de Bombeiro
+      } else if (tipoUsuario === "colaborador") {
+        props.setTelaAtiva(props.entrar); // Redireciona para a tela de Colaborador
+      }
+    } catch (err) {
+      console.error("Erro ao salvar tipo de usuário:", err);
+      Alert.alert("Erro", "Não foi possível salvar o tipo de usuário.");
+    }
+  };
+
+  const selecionarBombeiro = async () => {
+    try {
+      await AsyncStorage.setItem("tipoUsuario", "bombeiro"); // Salva o tipo de usuário como "bombeiro"
+      props.setTelaAtiva(props.perfilBB); // Redireciona para o PerfilBB
+    } catch (err) {
+      console.error("Erro ao salvar tipo de usuário:", err);
+      Alert.alert("Erro", "Não foi possível selecionar Bombeiro.");
+    }
+  };
 
   return (
     <View>
@@ -19,9 +46,10 @@ export function EuSouScreen(props) {
         <Text style={styles.entrar}>O que você é?</Text>
 
         <View style={styles.campoEuSou}>
+          {/* Botão para Bombeiro */}
           <TouchableOpacity
             style={styles.cardEuSou}
-            onPress={() => props.setTelaAtiva(props.perfilBB)}
+            onPress={() => selecionarBombeiro() }
           >
             <Text style={styles.textEuSou}>Eu sou Bombeiro</Text>
             <Ionicons
@@ -31,9 +59,10 @@ export function EuSouScreen(props) {
             ></Ionicons>
           </TouchableOpacity>
 
+          {/* Botão para Colaborador */}
           <TouchableOpacity
             style={styles.cardEuSou}
-            onPress={() => props.setTelaAtiva(props.entrar)}
+            onPress={() => selecionarTipoUsuario("colaborador")}
           >
             <Text style={styles.textEuSou}>Eu sou Colaborador</Text>
             <Ionicons
@@ -47,6 +76,7 @@ export function EuSouScreen(props) {
     </View>
   );
 }
+
 const createStyles = (theme) =>
   StyleSheet.create({
     logoEntrar: {

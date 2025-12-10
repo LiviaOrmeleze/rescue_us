@@ -140,7 +140,9 @@ export function EntrarScreen(props) {
           </View>
 
           <View style={styles.Link}>
-            <TouchableOpacity onPress={() => props.setTelaAtiva(props.cadastrar)}>
+            <TouchableOpacity
+              onPress={() => props.setTelaAtiva(props.cadastrar)}
+            >
               <Text style={styles.textLink}>Se não tem conta, cadastre-se</Text>
             </TouchableOpacity>
           </View>

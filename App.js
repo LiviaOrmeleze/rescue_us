@@ -18,6 +18,8 @@ import { Alerta } from "./components/Alerta";
 import { ListagemPerfil } from "./components/ListagemPerfil";
 import { PerfilBBScreen } from "./components/PerfilBBScreen";
 import { HomeBB } from "./components/HomeBB";
+import { RedesConhecidas } from "./components/RedesConhecidas";
+import { HistoricoAlerta } from "./components/HistoricoAlerta";
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -55,7 +57,7 @@ export default function App() {
         <PerfilBBScreen
           logoSource={logoSource}
           setTelaAtiva={setTelaAtiva}
-          homeBB={"homeBB"} 
+          homeBB={"homeBB"}
           Bombeiro={bombeiro}
         />
       )}
@@ -105,12 +107,27 @@ export default function App() {
           setTelaAtiva={setTelaAtiva}
           perfilBB={"perfilBB"}
           logoSource={logoSource}
+          ListagemPerfil={"listagem"}
+          RedesConhecidas={"RedesConhecidas"}
+          HistóricoDeAlerta={"HistoricoAlerta"}
         />
       )}
+
+      {telaAtiva === "RedesConhecidas" && (
+        <RedesConhecidas
+          setTelaAtiva={setTelaAtiva}
+          logoSource={logoSource}
+          homeBB={"homeBB"}
+        />
+      )}
+
+      {telaAtiva === "HistoricoAlerta" && (
+        <HistoricoAlerta setTelaAtiva={setTelaAtiva} homeBB={"homeBB"}/>
+      )}
+
       {alertaVisivel && (
         <Alerta handleLigar={handleLigar} setAlertaVisivel={setAlertaVisivel} />
       )}
-      
     </SafeAreaView>
   );
 }
