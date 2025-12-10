@@ -21,7 +21,7 @@ export function NotificacaoScreen(props) {
               size={30}
             ></Ionicons>
           </TouchableOpacity>
-          <Text style={styles.tituloNotificacao}>Notificações</Text>
+          <Text style={styles.tituloNotificacao}>Notificação</Text>
         </View>
 
         <View style={styles.cbmNot}>
@@ -141,4 +141,7 @@ const createStyles = (theme) =>
       fontWeight: "bold",
       fontSize: 15,
     },
+    colorRuaDiaData:{
+      color: theme.color
+    }
   })
