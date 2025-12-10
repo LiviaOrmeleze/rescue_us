@@ -6,83 +6,109 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
+import axios from "axios";
 
 export function PerfilScreen(props) {
   const styles = createStyles(useTheme());
+
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
+  const [remoteId, setRemoteId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Carrega perfil salvo ao montar
+  // Carregar dados do perfil localmente
   useEffect(() => {
-    const loadPerfil = async () => {
+    const carregarLocal = async () => {
       try {
         const json = await AsyncStorage.getItem("perfil");
         if (json) {
           const obj = JSON.parse(json);
 
-          // Caso `perfil` seja um objeto de perfil (legacy), usa diretamente
-          if (obj.nome || obj.telefone) {
-            setNome(obj.nome || "");
-            setEmail(obj.email || "");
-            setTelefone(obj.telefone || "");
-            setSenha(obj.senha || "");
-          } else if (obj.email) {
-            // `perfil` contém credenciais (salvas por Entrar/Cadastrar)
-            const userEmail = String(obj.email).trim().toLowerCase();
-            setEmail(userEmail);
-            setSenha(obj.senha || "");
-
-            // tenta carregar perfil individual por e-mail
-            const key = `perfil:${userEmail}`;
-            const perJson = await AsyncStorage.getItem(key);
-            if (perJson) {
-              const perObj = JSON.parse(perJson);
-              setNome(perObj.nome || "");
-              setTelefone(perObj.telefone || "");
-              setSenha(perObj.senha || obj.senha || "");
-            }
-          }
+          setNome(obj.nome || "");
+          setEmail(obj.email || "");
+          setTelefone(obj.telefone || "");
+          setSenha(obj.senha || "");
+          setRemoteId(obj.remoteId || null);
         }
       } catch (err) {
         console.log("Erro ao carregar perfil:", err);
       }
     };
-    loadPerfil();
+
+    carregarLocal();
   }, []);
 
-  // Salva perfil no AsyncStorage por e-mail (perfil:<email>)
+  // Salvar perfil local + sincronizar com API
   const salvarPerfil = async () => {
     try {
-      const userEmail = String(email || "")
-        .trim()
-        .toLowerCase();
+      const userEmail = (email || "").trim().toLowerCase();
       if (!userEmail) {
-        alert("Digite um e-mail para salvar o perfil.");
+        alert("Digite um e-mail para salvar.");
         return;
       }
 
-      const perfil = { nome, email: userEmail, telefone, senha };
+      const perfil = {
+        nome,
+        email: userEmail,
+        telefone,
+        senha,
+        remoteId,
+      };
 
-      // salva individualmente por e-mail
-      const key = `perfil:${userEmail}`;
-      await AsyncStorage.setItem(key, JSON.stringify(perfil));
+      // Salva tudo localmente
+      await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+      alert("Dados salvos localmente!");
 
-      // mantém também a referência atual (credenciais) para compatibilidade
-      await AsyncStorage.setItem(
-        "perfil",
-        JSON.stringify({ email: userEmail, senha })
-      );
+      // Sincronizar com o servidor
+      setLoading(true);
 
-      alert("Dados salvos com sucesso.");
+      try {
+        const apiUrl = "http://rescueus.somee.com/api/Perfis";
+        const payload = {
+          nome,
+          email: userEmail,
+          telefone,
+          senha,
+        };
+
+        let resp;
+
+        if (remoteId) {
+          resp = await axios.put(`${apiUrl}/${remoteId}`, payload);
+        } else {
+          resp = await axios.post(apiUrl, payload);
+        }
+
+        if (resp?.status === 200 || resp?.status === 201) {
+          const returned = resp.data ?? {};
+          const newId = returned.id ?? returned.ID ?? returned.idPerfil ?? null;
+
+          setRemoteId(newId);
+
+          // salva id atualizado no local
+          await AsyncStorage.setItem(
+            "perfil",
+            JSON.stringify({ ...perfil, remoteId: newId })
+          );
+
+          alert("Dados sincronizados com o servidor!");
+        }
+      } catch (err) {
+        console.log("Erro API:", err?.response?.data ?? err.message);
+        alert("Não foi possível sincronizar com o servidor. Dados mantidos.");
+      } finally {
+        setLoading(false);
+      }
     } catch (err) {
       console.log("Erro ao salvar perfil:", err);
       alert("Erro ao salvar dados.");
+      setLoading(false);
     }
   };
 
@@ -97,66 +123,80 @@ export function PerfilScreen(props) {
             style={styles.IconNot}
             name="arrow-back-circle-outline"
             size={30}
-          ></Ionicons>
+          />
         </TouchableOpacity>
+
         <Image
           source={props.logoSource}
           style={styles.logoPerfil}
           resizeMode="contain"
         />
       </View>
+
       <View style={styles.estPerfil}>
         <Image source={props.Bombeiro} style={styles.bombeiro} />
-        <Text style={styles.nomePerfil}>Bombeiro da Eliana</Text>
+        <Text style={styles.nomePerfil}>{nome || "Bombeiro"}</Text>
       </View>
+
       <View>
         <View style={styles.estDados}>
           <Text style={styles.Prin}>Nome</Text>
           <TextInput
             style={styles.Seng}
             value={nome}
-            onChangeText={(text) => setNome(text)}
+            onChangeText={setNome}
             placeholder="Digite seu nome"
             placeholderTextColor="#888"
           />
         </View>
+
         <View style={styles.estDados}>
           <Text style={styles.Prin}>E-mail</Text>
           <TextInput
             style={styles.Seng}
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={setEmail}
             placeholder="Digite seu e-mail"
             placeholderTextColor="#888"
             keyboardType="email-address"
+            autoCapitalize="none"
           />
         </View>
+
         <View style={styles.estDados}>
           <Text style={styles.Prin}>Telefone</Text>
           <TextInput
             style={styles.Seng}
             value={telefone}
-            onChangeText={(text) => setTelefone(text)}
+            onChangeText={setTelefone}
             placeholder="Digite seu telefone"
             placeholderTextColor="#888"
             keyboardType="numeric"
           />
         </View>
+
         <View style={styles.estDados}>
           <Text style={styles.Prin}>Senha</Text>
           <TextInput
             style={styles.Seng}
             value={senha}
-            onChangeText={(text) => setSenha(text)}
+            onChangeText={setSenha}
             placeholder="Digite sua senha"
             placeholderTextColor="#888"
             secureTextEntry={true}
           />
         </View>
       </View>
+
       <View style={styles.btn}>
-        <TouchableOpacity style={styles.btnEnteCad} onPress={() => props.setTelaAtiva(props.home)}>
-          <Text style={styles.TextBtnEnteCad}>Salvar</Text>
+        <TouchableOpacity
+          style={styles.btnEnteCad}
+          onPress={salvarPerfil}
+          disabled={loading}
+        >
+          <Text style={styles.TextBtnEnteCad}>
+            {loading ? "Salvando..." : "Salvar"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -168,13 +208,13 @@ const createStyles = (theme) =>
     estCabPerfil: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between", // Coloca o botão e a logo em extremidades opostas
+      justifyContent: "space-between",
       width: "100%",
     },
     logoPerfil: {
-      width: 200, // Define a largura da logo
-      height: 80, // Define a altura da logo
-      resizeMode: "contain", // Garante que a imagem seja redimensionada corretamente
+      width: 200,
+      height: 80,
+      resizeMode: "contain",
     },
     bombeiro: {
       width: 150,

@@ -45,7 +45,7 @@ export function ListagemPerfil(props) {
     <View style={styles.container}>
       <View style={styles.estCabPerfil}>
         <TouchableOpacity
-          onPress={() => props.setTelaAtiva(props.home)}
+          onPress={() => props.setTelaAtiva(props.homeBB)}
           style={styles.btnVoltar}
         >
           <Ionicons
