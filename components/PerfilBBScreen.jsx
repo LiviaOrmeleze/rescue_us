@@ -22,7 +22,7 @@ export function PerfilBBScreen(props) {
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [tipoIdentificador, setTipoIdentificador] = useState("");
+  const [tipoIdentificador, setTipoIdentificador] = useState("PM");
   const [identificador, setIdentificador] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
@@ -30,17 +30,52 @@ export function PerfilBBScreen(props) {
     try {
       console.log("🔄 Carregando perfil...");
       const perfilString = await AsyncStorage.getItem("perfil");
+
+      // se existir "perfil" tenta usar; se só tiver credenciais, tenta `perfil:<email>`
       if (perfilString) {
         const perfil = JSON.parse(perfilString);
-        setNome(perfil.nome || "");
-        setEmail(perfil.email || "");
-        setTelefone(perfil.telefone || "");
-        setSenha(perfil.senha || "");
-        setTipoIdentificador(perfil.tipoIdentificador || "");
-        setIdentificador(perfil.identificador || "");
-        console.log("✅ Perfil carregado:", perfil);
+
+        // se o objeto já contém dados completos, usa direto
+        if (
+          perfil.nome ||
+          perfil.telefone ||
+          perfil.tipoIdentificador ||
+          perfil.identificador
+        ) {
+          setNome(perfil.nome || "");
+          setEmail(perfil.email || "");
+          setTelefone(perfil.telefone || "");
+          setSenha(perfil.senha || "");
+          setTipoIdentificador(perfil.tipoIdentificador || "PM");
+          setIdentificador(perfil.identificador || "");
+          console.log("✅ Perfil completo carregado de 'perfil':", perfil);
+          return;
+        }
+
+        // se só tem credenciais (email), tenta carregar perfil:<email>
+        if (perfil.email) {
+          const userEmail = String(perfil.email).trim().toLowerCase();
+          setEmail(userEmail);
+          setSenha(perfil.senha || "");
+
+          const key = `perfil:${userEmail}`;
+          const perJson = await AsyncStorage.getItem(key);
+          if (perJson) {
+            const perObj = JSON.parse(perJson);
+            setNome(perObj.nome || "");
+            setTelefone(perObj.telefone || "");
+            setSenha(perObj.senha || perfil.senha || "");
+            setTipoIdentificador(perObj.tipoIdentificador || "PM");
+            setIdentificador(perObj.identificador || "");
+            console.log("✅ Perfil carregado de key:", key, perObj);
+            return;
+          }
+
+          console.log("⚠️ Nenhum perfil por-usuário encontrado para", userEmail);
+          return;
+        }
       } else {
-        console.log("⚠️ Nenhum perfil encontrado.");
+        console.log("⚠️ Nenhum perfil genérico encontrado.");
       }
     } catch (err) {
       console.error("Erro ao carregar perfil:", err);
@@ -49,11 +84,9 @@ export function PerfilBBScreen(props) {
 
   const salvarPerfil = async () => {
     try {
-      const userEmail = String(email || "")
-        .trim()
-        .toLowerCase();
+      const userEmail = String(email || "").trim().toLowerCase();
       if (!userEmail) {
-        alert("Digite um e-mail para salvar o perfil.");
+        Alert.alert("Erro", "Digite um e-mail para salvar o perfil.");
         return;
       }
 
@@ -67,12 +100,10 @@ export function PerfilBBScreen(props) {
       };
 
       const key = `perfil:${userEmail}`;
+      // grava perfil completo por e-mail
       await AsyncStorage.setItem(key, JSON.stringify(perfil));
-
-      await AsyncStorage.setItem(
-        "perfil",
-        JSON.stringify({ email: userEmail, senha })
-      );
+      // grava também na chave genérica "perfil" para facilitar restauração
+      await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
 
       Alert.alert("Sucesso", "Perfil salvo com sucesso!");
       console.log("✅ Dados salvos:", perfil);
@@ -124,7 +155,7 @@ export function PerfilBBScreen(props) {
         </View>
         <View style={styles.estPerfil}>
           <Image source={props.Bombeiro} style={styles.bombeiro} />
-          <Text style={styles.nomePerfil}>Bombeiro da Eliana</Text>
+          <Text style={styles.nomePerfil}>{nome ? nome : "Bombeiro"}</Text>
         </View>
         <View>
           <View style={styles.estDados}>
@@ -135,6 +166,7 @@ export function PerfilBBScreen(props) {
               onChangeText={setNome}
               placeholder="Digite seu nome"
               placeholderTextColor="#888"
+              autoCapitalize="words"
             />
           </View>
           <View style={styles.estDados}>
@@ -146,6 +178,7 @@ export function PerfilBBScreen(props) {
               placeholder="Digite seu e-mail"
               placeholderTextColor="#888"
               keyboardType="email-address"
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.estDados}>
@@ -279,5 +312,11 @@ const createStyles = (theme) =>
     },
     picker: {
       color: theme.color,
+    },
+    pickerContainer: {
+      borderWidth: 1,
+      borderColor: theme.borderColorCaixa,
+      borderRadius: 12,
+      overflow: "hidden",
     },
   });
