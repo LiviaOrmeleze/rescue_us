@@ -52,16 +52,13 @@ export function EntrarScreen(props) {
           await AsyncStorage.setItem("token", response.data.token);
         }
 
-        // atualiza referência genérica de credenciais locais
-        await AsyncStorage.setItem(
-          "perfil",
-          JSON.stringify({ email: userEmail, senha: userSenha })
-        );
-
-        // verifica perfil individual local para decidir navegação
+        // tenta restaurar perfil completo salvo por usuário (perfil:email).
+        // Se existir, grava-o em "perfil" (genérico) para preencher PerfilScreen.
         const key = `perfil:${userEmail}`;
         const perJson = await AsyncStorage.getItem(key);
         if (perJson) {
+          // restaura perfil completo para o key genérico
+          await AsyncStorage.setItem("perfil", perJson);
           const perObj = JSON.parse(perJson);
           const temPerfilPreenchido =
             (perObj.nome && String(perObj.nome).trim() !== "") ||
@@ -70,7 +67,11 @@ export function EntrarScreen(props) {
           return;
         }
 
-        // se não houver perfil individual, vai para euSou
+        // se não houver perfil por-usuário, grava credenciais mínimas no key genérico
+        await AsyncStorage.setItem(
+          "perfil",
+          JSON.stringify({ email: userEmail, senha: userSenha })
+        );
         props.setTelaAtiva("euSou");
         return;
       }

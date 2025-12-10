@@ -61,8 +61,11 @@ export function PerfilScreen(props) {
         remoteId,
       };
 
-      // Salva tudo localmente
+      // grava no key genérico e também no key por-usuário (para restauração no login)
       await AsyncStorage.setItem("perfil", JSON.stringify(perfil));
+      if (userEmail) {
+        await AsyncStorage.setItem(`perfil:${userEmail}`, JSON.stringify(perfil));
+      }
       alert("Dados salvos localmente!");
 
       // Sincronizar com o servidor
@@ -90,13 +93,18 @@ export function PerfilScreen(props) {
           const newId =
             returned.id ?? returned.ID ?? returned.idPerfil ?? null;
 
+          // atualiza estado e grava ambos os keys com remoteId
           setRemoteId(newId);
 
           // salva id atualizado no local
-          await AsyncStorage.setItem(
-            "perfil",
-            JSON.stringify({ ...perfil, remoteId: newId })
-          );
+          const perfilAtualizado = { ...perfil, remoteId: newId };
+          await AsyncStorage.setItem("perfil", JSON.stringify(perfilAtualizado));
+          if (userEmail) {
+            await AsyncStorage.setItem(
+              `perfil:${userEmail}`,
+              JSON.stringify(perfilAtualizado)
+            );
+          }
 
           alert("Dados sincronizados com o servidor!");
         }
