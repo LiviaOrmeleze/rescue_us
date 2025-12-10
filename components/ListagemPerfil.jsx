@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  RefreshControl,
+} from "react-native";
 import { useTheme } from "../hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
-import apiService from "../service/apiService";
+import axios from "axios";
 
 export function ListagemPerfil(props) {
   const styles = createStyles(useTheme());
@@ -13,10 +21,33 @@ export function ListagemPerfil(props) {
   const carregarPerfis = async () => {
     try {
       setLoading(true);
-      const lista = await apiService.getPerfisSimples();
-      setPerfis(lista || []);
+      const apiUrl = "http://rescueus.somee.com/api/Perfis";
+      const resp = await axios.get(apiUrl, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = resp?.data ?? [];
+
+      // normaliza resposta para array de objetos { nome, email, raw }
+      const items = Array.isArray(data)
+        ? data
+        : Array.isArray(data.items)
+        ? data.items
+        : Array.isArray(data.data)
+        ? data.data
+        : [];
+
+      const lista = (items || []).map((u) => ({
+        nome: u.nome ?? u.name ?? u.Nome ?? "",
+        email: u.email ?? u.Email ?? "",
+        raw: u,
+      }));
+
+      setPerfis(lista);
     } catch (error) {
-      console.error("Erro ao buscar perfis:", error);
+      console.error(
+        "Erro ao buscar perfis:",
+        error?.response?.data ?? error.message
+      );
       alert("Erro ao carregar listagem de perfis.");
     } finally {
       setLoading(false);
@@ -62,19 +93,32 @@ export function ListagemPerfil(props) {
       </View>
 
       <Text style={styles.titulo}>Listagem de Perfis</Text>
+      <Text style={styles.descricao}>Aqui você pode visualizar todos os perfis cadastrados que contribuem para ampliação da sua rede em casos de emergências!</Text>
 
       {loading && !refreshing ? (
-        <Text style={{ color: styles.nome.color, textAlign: "center" }}>Carregando...</Text>
+        <Text style={{ color: styles.nome.color, textAlign: "center" }}>
+          Carregando...
+        </Text>
       ) : (
         <FlatList
           data={perfis}
-          keyExtractor={(item, index) => item.email || index.toString()}
+          keyExtractor={(item, index) =>
+            (item.email || index.toString()).toString()
+          }
           renderItem={renderItem}
           contentContainerStyle={styles.lista}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={styles.nome.color} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={styles.nome.color}
+            />
           }
-          ListEmptyComponent={<Text style={{ color: styles.nome.color, textAlign: "center" }}>Nenhum perfil encontrado.</Text>}
+          ListEmptyComponent={
+            <Text style={{ color: styles.nome.color, textAlign: "center" }}>
+              Nenhum perfil encontrado.
+            </Text>
+          }
         />
       )}
     </View>
@@ -91,13 +135,13 @@ const createStyles = (theme) =>
     estCabPerfil: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between", // Coloca o botão e a logo em extremidades opostas
+      justifyContent: "space-between",
       width: "100%",
     },
     logoPerfil: {
-      width: 200, // Define a largura da logo
-      height: 80, // Define a altura da logo
-      resizeMode: "contain", // Garante que a imagem seja redimensionada corretamente
+      width: 200,
+      height: 80,
+      resizeMode: "contain",
     },
     IconNot: {
       color: theme.color,
@@ -108,6 +152,12 @@ const createStyles = (theme) =>
       color: theme.color,
       marginBottom: 20,
       marginTop: 15,
+      textAlign: "center",
+    },
+    descricao: {
+      fontSize: 16,
+      color: theme.color,
+      marginBottom: 25,
       textAlign: "center",
     },
     lista: {

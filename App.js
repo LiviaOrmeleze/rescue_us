@@ -23,7 +23,7 @@ export default function App() {
   const colorScheme = useColorScheme();
   const logoSource = colorScheme === "light" ? LogoDark : LogoLight;
   const [alertaVisivel, setAlertaVisivel] = useState(false);
-  const [telaAtiva, setTelaAtiva] = useState("entrar");
+  const [telaAtiva, setTelaAtiva] = useState("listagem");
   const styles = createStyles(useTheme());
   const handleLigar = () => {
     Linking.openURL(`tel:193`);

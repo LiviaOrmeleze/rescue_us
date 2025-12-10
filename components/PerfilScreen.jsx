@@ -87,7 +87,8 @@ export function PerfilScreen(props) {
 
         if (resp?.status === 200 || resp?.status === 201) {
           const returned = resp.data ?? {};
-          const newId = returned.id ?? returned.ID ?? returned.idPerfil ?? null;
+          const newId =
+            returned.id ?? returned.ID ?? returned.idPerfil ?? null;
 
           setRemoteId(newId);
 
